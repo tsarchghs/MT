@@ -73,6 +73,7 @@ void lex(char sCode[],struct token *rootToken){
 			printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
 			cToken->next = nxt_token;
 			cToken = cToken->next;
+			n++;
 		}	
 	}
 	//printf(">>> ");
