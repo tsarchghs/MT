@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lexer.h"
 #include <string.h>
+#include "lexer.h"
+#include "parser.h"
 
 int main(int argc,char *argv[]){
 	struct token rootToken = {.type="root",.value=NULL,.next=NULL};
+	struct tree ast = {.type=NULL,.token=NULL,.next=NULL};
 	if (argc > 1){
 		char * buffer = 0;
 		long length;
@@ -27,6 +29,7 @@ int main(int argc,char *argv[]){
 		if (buffer){
 			//printf("%s\n",buffer);
 			lex(buffer,&rootToken);
+			parse(&rootToken,&ast);
 		}
 	} else {
 		char *input = malloc(sizeof(char) * 255);
@@ -48,6 +51,7 @@ int main(int argc,char *argv[]){
 			}
 			 else {
 				lex(input,&rootToken);
+				parse(&rootToken,&ast);	
 			}
 		}
 	}
