@@ -17,6 +17,7 @@ int main(void){
 				cToken = cToken->next;
 				x++;	
 			}
+			printf("<%d> Last token: [%s] [%s] [%p]\n",x,cToken->type,cToken->value,cToken->next);
 			printf(">>> ");
 		} else if (strcmp(input,"show/rootToken") == 0){
 				printf("<%d> Root token : [%s] [%s] [%p]\n",0,rootToken.type,rootToken.value,rootToken.next);			
