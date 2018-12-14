@@ -1,3 +1,12 @@
 #include "helpers.h"
 
-void parse(struct token *root,struct tree *ast);
+struct tree
+{
+	char *type;
+	struct token *token;
+	struct tree *next;
+};
+
+
+
+void parse(struct token *rootToken,struct tree *ast);
