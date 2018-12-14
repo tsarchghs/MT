@@ -1,12 +1,5 @@
 #include <stdio.h>
-
-struct token
-{
-	char *type;
-	char *value;
-	struct token *next;
-};
-
+#include "helpers.h"
 
 void lex(char *sCode,struct token *rootToken);
 int numberLaH(char string[],int sI,size_t sz); // number lookahead

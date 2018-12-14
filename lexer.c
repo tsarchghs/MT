@@ -1,5 +1,4 @@
 #include "lexer.h"
-#include "helpers.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -8,7 +7,7 @@
 
 //char numbers[] = {'0','1','2','3','4','5','6','7','8','9'};
 
-void lex(char sCode[],struct token *rootToken){
+void lex(char *sCode,struct token *rootToken){
 	struct token *cToken = rootToken; // current token
 	int n = 0;
 	while (cToken->next != NULL){
