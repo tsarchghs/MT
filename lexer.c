@@ -1,9 +1,9 @@
-#include "lexer.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include "lexer.h"
 
 //char numbers[] = {'0','1','2','3','4','5','6','7','8','9'};
 
@@ -23,7 +23,7 @@ void lex(char *sCode,struct token *rootToken){
 		nxt_token->type = NULL;
 		nxt_token->value = NULL;
 		nxt_token->next = NULL;
-		if (!(sCode[x] == ' ')){
+		if (!(sCode[x] == ' ') && !isspace(sCode[x])){
 			char *str;
 			char *value = NULL;
 			char *type;
@@ -45,11 +45,13 @@ void lex(char *sCode,struct token *rootToken){
 				type = malloc(sizeof(char));
 				strcpy(type,";");
 				nxt_token->type = type;
+	 			nxt_token->value = type;
 			}
 			else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/'){
 				type = malloc(sizeof(char)*2);
-				value = malloc(sizeof(char)*1);
-				*value = sCode[x];
+				value = malloc(sizeof(char)*2);
+				value[0] = sCode[x];
+				value[1] = '\0';
 				if (sCode[x] == '='){
 					strcpy(type,"assignment");
 				} else {
