@@ -42,6 +42,10 @@ void lex(char sCode[],struct token *rootToken){
 	 			strcpy(type,"symbol");
 	 			nxt_token->type = type;
 				x = eI;
+			} else if (sCode[x] == ';'){
+				type = malloc(sizeof(char));
+				strcpy(type,";");
+				nxt_token->type = type;
 			}
 			else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/'){
 				type = malloc(sizeof(char)*2);
