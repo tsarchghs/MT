@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "helpers.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -9,15 +10,20 @@
 
 void lex(char sCode[],struct token *rootToken){
 	struct token *cToken = rootToken; // current token
-
+	int n = 0;
 	while (cToken->next != NULL){
-		if (cToken->value == NULL){
-			break;
-		}
-		cToken = cToken->next; // removing this fixed bug when trying to input more than 2 times...
+		cToken = cToken->next;
+		n++;
 	}
+	//struct token nxt_token = {.type=NULL,.value=NULL,.next=NULL};
+	//cToken->next = &nxt_token;
+	//cToken = cToken->next;
 	size_t sz = strlen(sCode);
 	for (int x=0;x<sz;x++){
+		struct token *nxt_token = malloc(sizeof(struct token));
+		nxt_token->type = NULL;
+		nxt_token->value = NULL;
+		nxt_token->next = NULL;
 		if (!(sCode[x] == ' ')){
 			char *str;
 			char *value = NULL;
@@ -27,14 +33,14 @@ void lex(char sCode[],struct token *rootToken){
 				value = malloc(sizeof(char)*(eI-x));
 				//printf("eI - x = %d\n",eI-x);
 				type = malloc(sizeof(char)*10);
-	 			cToken->value = value;
+	 			nxt_token->value = value;
 				int error = sliceString(sCode,x,eI,sz,value);
 				if (error == 1){
 					printf("Error: Invalid variable name\n");
 					break;
 				}
 	 			strcpy(type,"symbol");
-	 			cToken->type = type;
+	 			nxt_token->type = type;
 				x = eI;
 			}
 			else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/'){
@@ -46,8 +52,8 @@ void lex(char sCode[],struct token *rootToken){
 				} else {
 					strcpy(type,"op");
 				}
-				cToken->type = type;
-				cToken->value = value;
+				nxt_token->type = type;
+				nxt_token->value = value;
 			}
 			else {
 				int eI = numberLaH(sCode,x,sz);
@@ -57,41 +63,19 @@ void lex(char sCode[],struct token *rootToken){
 				}
 				str = malloc(sizeof(char)*(eI-x));
 				sliceString(sCode,x,eI,sz,str);
-				cToken->value = str;
+				nxt_token->value = str;
 				type = malloc(sizeof(char)*10);
-				cToken->type = type;
+				nxt_token->type = type;
 	 			strcpy(type,"number");
 				x = eI;
 			}
-			printf("%p / %p\n",cToken->type,cToken->value);
-			//printf("DSADAS123\n"); 
-			printf("Token returned : [%s] [%s]\n",cToken->type,cToken->value);
-			struct token t_token = {.type=NULL,.value=NULL,.next=NULL};
-			cToken->next = &t_token;
+			//printf("%p / %p\n",cToken->type,cToken->value);
+			printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
+			cToken->next = nxt_token;
 			cToken = cToken->next;
 		}	
 	}
 	//printf(">>> ");
-}
-
-int sliceString(char string[],int sI,int eI,size_t sz,char *location){
-	if (sz > eI){
-		printf("Warning: Ending index (eI=%d) bigger than size of char array\nexecuting eI--;\n",eI);
-		eI--;
-	}
-	//char *str = malloc(sizeof(char) * (eI - sI)); // Ending index - starting index
-	//printf("%d-%d-%d\n",eI,sI,1);
-	char str[eI-sI+1];
-	int i = 0;
-	for (int x=sI;x<eI;x++){
-		str[i] = string[x];
-		i++;	
-	}
-	//printf("%d-\n"); 	
-	str[i] = '\0';
-	//printf("-123-%s\n",str);
-	strcpy(location,str);
-	return 0;
 }
 
 int numberLaH(char string[],int sI,size_t sz){ // number lookahead
@@ -123,6 +107,13 @@ int stringLaH(char string[],int sI,size_t sz,int type){
 	for (int x=sI;x<sz;x++){
 		if (isspace(string[x])){
 			break;
+		}
+		if (string[x+1] == '=' ||
+			string[x+1] == '+' ||
+			string[x+1] == '-' ||
+			string[x+1] == '/'){
+			//break;
+			//TODO
 		}
 		eI++;
 	}
