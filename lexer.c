@@ -40,7 +40,7 @@ void lex(char *sCode,struct token *rootToken){
 				type = malloc(sizeof(char)*10);
 	 			nxt_token->value = value;
 				int error = sliceString(sCode,x,eI,sz,value);
-				if (error == 1){
+				if (error == -1){
 					printf("Error: Invalid variable name\n");
 					break;
 				}
@@ -80,7 +80,7 @@ void lex(char *sCode,struct token *rootToken){
 				type = malloc(sizeof(char)*10);
 				nxt_token->type = type;
 	 			strcpy(type,"number");
-				x = eI -1; // idk why it doesn't work without -1 :'(
+				x = eI - 1; // idk why it doesn't work without -1 :'(
 			}
 			//printf("%p / %p\n",cToken->type,cToken->value);
 			printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
@@ -115,7 +115,7 @@ int stringLaH(char string[],int sI,size_t sz,int type){
 	int eI = sI; // eI is ending index ( the index where the last char is)
 	if (type == 0){
 		if (!(isalpha(string[0]))){
-			return 1;
+			return -1;
 		}
 	}
 	for (int x=sI;x<sz;x++){
