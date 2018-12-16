@@ -27,7 +27,13 @@ void lex(char *sCode,struct token *rootToken){
 			char *str;
 			char *value = NULL;
 			char *type;
-			if (isalpha(sCode[x])){
+			if ((sCode[x] == 'e' && sCode[x+1] == 'n' && sCode[x+2] == 'd')){
+				type = malloc(sizeof(char)*4);
+				strcpy(type,"end");
+				nxt_token->type = type;
+	 			nxt_token->value = type;
+	 			x += 2;
+			} else if (isalpha(sCode[x])){
 				int eI = stringLaH(sCode,x,sz,0); // ending index of string 
 				value = malloc(sizeof(char)*(eI-x));
 				//printf("eI - x = %d\n",eI-x);
@@ -41,7 +47,7 @@ void lex(char *sCode,struct token *rootToken){
 	 			strcpy(type,"symbol");
 	 			nxt_token->type = type;
 				x = eI;
-			} else if (sCode[x] == ';' || sCode[x] == '}' || sCode[x] == '{'){
+			} else if (sCode[x] == ';' || sCode[x] == ':' || (sCode[x] == 'e' && sCode[x+1] == 'n' && sCode[x+2] == 'd')){
 				type = malloc(sizeof(char) * 2);
 				type[0] = sCode[x];
 				type[1] = '\0';
