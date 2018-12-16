@@ -5,8 +5,11 @@
 #include "parser.h"
 
 int main(int argc,char *argv[]){
+	char START[] = "int main()";
+	char END[] = "}";
 	struct token rootToken = {.type="root",.value=NULL,.next=NULL};
 	struct tree ast = {.type=NULL,.token=NULL,.next=NULL};
+	char code[1000];
 	ast.leftChild = malloc(sizeof(struct tree));
 	ast.rightChild = malloc(sizeof(struct tree));
 	if (argc > 1){
@@ -31,7 +34,7 @@ int main(int argc,char *argv[]){
 		if (buffer){
 			//printf("%s\n",buffer);
 			lex(buffer,&rootToken);
-			parse(&rootToken,&ast);
+			generate(&rootToken,&code);
 		}
 	} else {
 		char *input = malloc(sizeof(char) * 255);
@@ -53,8 +56,20 @@ int main(int argc,char *argv[]){
 			}
 			 else {
 				lex(input,&rootToken);
-				parse(&rootToken,&ast);	
+				generate(&rootToken,&code);	
 			}
 		}
 	}
+	FILE *fptr;
+	fptr = fopen("o.c","w+");
+
+	if(fptr == NULL)
+	{
+	  printf("Error!");   
+	  exit(1);             
+	}
+	fprintf(fptr,"%s %s %s",START,code,END);
+	fclose(fptr);
+	system("clang o.c");
+	remove("o.c");
 }
