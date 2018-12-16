@@ -5,6 +5,8 @@ struct tree
 	char *type;
 	struct token *token;
 	struct tree *next;
+	struct tree *leftChild;
+	struct tree *rightChild;
 };
 
 
