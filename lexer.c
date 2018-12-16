@@ -46,7 +46,7 @@ void lex(char *sCode,struct token *rootToken){
 				}
 	 			strcpy(type,"symbol");
 	 			nxt_token->type = type;
-				x = eI;
+				x = eI - 1; // idk why it doesn't work without -1 :'(
 			} else if (sCode[x] == ';' || sCode[x] == ':' || (sCode[x] == 'e' && sCode[x+1] == 'n' && sCode[x+2] == 'd')){
 				type = malloc(sizeof(char) * 2);
 				type[0] = sCode[x];
@@ -80,7 +80,7 @@ void lex(char *sCode,struct token *rootToken){
 				type = malloc(sizeof(char)*10);
 				nxt_token->type = type;
 	 			strcpy(type,"number");
-				x = eI;
+				x = eI -1; // idk why it doesn't work without -1 :'(
 			}
 			//printf("%p / %p\n",cToken->type,cToken->value);
 			printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
@@ -101,7 +101,7 @@ int numberLaH(char string[],int sI,size_t sz){ // number lookahead
 		if (isalpha(string[x])){
 			return 500;
 		}
-		if (string[x] < 48 || string[x] > 57)	{
+		if (string[x] < 48 || string[x] > 57 || string[x] == ';')	{
 			break;
 		}
 		eI++;
@@ -122,11 +122,14 @@ int stringLaH(char string[],int sI,size_t sz,int type){
 		if (isspace(string[x])){
 			break;
 		}
-		if (string[x+1] == '=' ||
-			string[x+1] == '+' ||
-			string[x+1] == '-' ||
-			string[x+1] == '/'){
-			//break;
+		if (string[x] == '=' ||
+			string[x] == '+' ||
+			string[x] == '>' ||
+			string[x] == '<' ||
+			string[x] == '-' ||
+			string[x] == '/' || 
+			string[x] == ';'){
+			break;
 			//TODO
 		}
 		eI++;
