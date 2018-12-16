@@ -7,6 +7,8 @@
 int main(int argc,char *argv[]){
 	struct token rootToken = {.type="root",.value=NULL,.next=NULL};
 	struct tree ast = {.type=NULL,.token=NULL,.next=NULL};
+	ast.leftChild = malloc(sizeof(struct tree));
+	ast.rightChild = malloc(sizeof(struct tree));
 	if (argc > 1){
 		char * buffer = 0;
 		long length;
