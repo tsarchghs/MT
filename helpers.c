@@ -5,6 +5,7 @@
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
 		printf("Warning: Ending index (eI=%d) bigger than size of char array\n",eI);
+		return -1;
 	}
 	//char *str = malloc(sizeof(char) * (eI - sI)); // Ending index - starting index
 	//printf("%d-%d-%d\n",eI,sI,1);
