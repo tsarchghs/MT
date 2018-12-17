@@ -5,7 +5,7 @@
 #include "parser.h"
 
 int main(int argc,char *argv[]){
-	char START[] = "int main()";
+	char START[] = "int main() {";
 	char END[] = "}";
 	struct token rootToken = {.type="root",.value=NULL,.next=NULL};
 	struct tree ast = {.type=NULL,.token=NULL,.next=NULL};
@@ -71,5 +71,5 @@ int main(int argc,char *argv[]){
 	fprintf(fptr,"%s %s %s",START,code,END);
 	fclose(fptr);
 	system("clang o.c");
-	remove("o.c");
+	//remove("o.c");
 }
