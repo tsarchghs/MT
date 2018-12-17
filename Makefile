@@ -8,14 +8,14 @@ CFLAGS = -fsanitize=signed-integer-overflow -fsanitize=undefined -ggdb3 -O0 -Qun
 EXE = compiler
 
 # space-separated list of header files
-HDRS = helpers.h lexer.h parser.h
+HDRS = helpers.h lexer.h parser.h codegen.h
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
 LIBS =
 
 # space-separated list of source files
-SRCS = helpers.c lexer.c parser.c compiler.c
+SRCS = helpers.c lexer.c parser.c codegen.c compiler.c
 
 # automatically generated list of object files
 OBJS = $(SRCS:.c=.o)
