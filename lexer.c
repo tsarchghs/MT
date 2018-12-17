@@ -18,7 +18,9 @@ void lex(char *sCode,struct token *rootToken){
 	//cToken->next = &nxt_token;
 	//cToken = cToken->next;
 	size_t sz = strlen(sCode);
+	int tokenReturned = 0;
 	for (int x=0;x<sz;x++){
+		tokenReturned = 1;
 		struct token *nxt_token = malloc(sizeof(struct token));
 		nxt_token->type = NULL;
 		nxt_token->value = NULL;
@@ -72,7 +74,7 @@ void lex(char *sCode,struct token *rootToken){
 				nxt_token->type = type;
 				nxt_token->value = value;
 			}
-			else {
+			else if (isdigit(sCode[x])) {
 				int eI = numberLaH(sCode,x,sz);
 				if (eI == 500){ // 500 means that number is followed by letters which result in bad variable name error
 					printf("Error: Invalid variable name\n");
@@ -85,12 +87,17 @@ void lex(char *sCode,struct token *rootToken){
 				nxt_token->type = type;
 		 		strcpy(type,"number");
 				x = eI - 1; // idk why it doesn't work without -1 :'(
+			} else {
+				printf("Syntax error --> %c\n",sCode[x]);
+				tokenReturned = 0;
 			}
 			//printf("%p / %p\n",cToken->type,cToken->value);
-			printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
-			cToken->next = nxt_token;
-			cToken = cToken->next;
-			n++;
+			if (tokenReturned){
+				printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
+				cToken->next = nxt_token;
+				cToken = cToken->next;
+				n++;
+			}
 		}	
 	}
 	//printf(">>> ");
@@ -132,6 +139,7 @@ int stringLaH(char string[],int sI,size_t sz,int type){
 			string[x] == '<' ||
 			string[x] == '-' ||
 			string[x] == '/' || 
+			string[x] == ':' || 
 			string[x] == ';'){
 			break;
 			//TODO
