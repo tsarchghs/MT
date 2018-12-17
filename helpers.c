@@ -21,3 +21,14 @@ int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	strcpy(location,str);
 	return 0;
 }
+
+int count(char string[]){
+	int i = 0;
+	while (1){
+		if (string[i] == '\0'){
+			break;
+		}
+		i++;
+	}
+	return i;
+}
