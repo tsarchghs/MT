@@ -3,11 +3,11 @@ The compiler skips the AST phase and produces the output based on only the token
 Currently it is in alpha stage and supports only integers.
 
 Sample code:
-```
-c = 1 + 2;
-d = c + 1;
+```javascript
+var c = 1 + 2;
+var d = c + 1;
 
-if c>d:
+if c > d:
 	d=d+1;
 end
 ```
