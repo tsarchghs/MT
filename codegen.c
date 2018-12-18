@@ -5,12 +5,21 @@
 void generate(struct token *rootToken,char *code){
 	int sz = 0;
 	int inConditional = 0;
+	int isString = 0;
 	//strcpy(code,START);
 	//sz += sizeof(START) / sizeof(START[0]);
 	do {
 		if (strcmp(rootToken->type,"declaration") == 0){
-			strcpy(code+sz,"int ");
-			sz += count(rootToken->value) + 1;
+			if (strcmp(rootToken->next->next->type,"assignment") == 0){
+				if (strcmp(rootToken->next->next->next->type,"string") == 0){
+					strcpy(code+sz,"char ");
+					isString = 1;
+					sz += 5;
+				} else if (strcmp(rootToken->next->next->next->type,"number") == 0){
+					strcpy(code+sz,"int ");
+					sz += 4;
+				}
+			}
 		} else if (strcmp(rootToken->type,"symbol") == 0){
 			strcpy(code + sz,rootToken->value);
 			sz += count(rootToken->value);
@@ -20,9 +29,14 @@ void generate(struct token *rootToken,char *code){
 				code[sz] = ')';
 				sz++;
 				inConditional = 0;
+			} else if (isString){
+				strcpy(code+sz,"[] ");
+				sz += 3;
+				isString = 0;
 			}
 		} else if (strcmp(rootToken->type,"assignment") == 0 ||
 				   strcmp(rootToken->type,"operator") == 0 || 
+				   strcmp(rootToken->type,"string") == 0 || 
 				   strcmp(rootToken->type,";") == 0 ||
 				   strcmp(rootToken->type,"number") == 0){
 			strcpy(code + sz,rootToken->value);
