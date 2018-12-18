@@ -48,7 +48,10 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				if (strcmp(value,"if") == 0){
 					strcpy(type,"conditional");
-				} else {
+				} else if (strcmp(value,"var") == 0){
+					strcpy(type,"declaration");
+				}
+				 else {
 					strcpy(type,"symbol");
 				}
 	 			nxt_token->type = type;
