@@ -8,11 +8,10 @@ void generate(struct token *rootToken,char *code){
 	//strcpy(code,START);
 	//sz += sizeof(START) / sizeof(START[0]);
 	do {
-		if (strcmp(rootToken->type,"symbol") == 0){
-			if (rootToken->next != NULL && strcmp(rootToken->next->type,"assignment") == 0){
-				strcpy(code + sz,"int ");
-				sz += 4;
-			}
+		if (strcmp(rootToken->type,"declaration") == 0){
+			strcpy(code+sz,"int ");
+			sz += count(rootToken->value) + 1;
+		} else if (strcmp(rootToken->type,"symbol") == 0){
 			strcpy(code + sz,rootToken->value);
 			sz += count(rootToken->value);
 			code[sz] = ' ';
