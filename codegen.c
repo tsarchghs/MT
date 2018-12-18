@@ -16,7 +16,7 @@ void generate(struct token *rootToken,char *code){
 			sz += count(rootToken->value);
 			code[sz] = ' ';
 			sz++;
-			if (rootToken->next->type[0] == ':' && inConditional){
+			if (rootToken->next != NULL && rootToken->next->type[0] == ':' && inConditional){
 				code[sz] = ')';
 				sz++;
 				inConditional = 0;
