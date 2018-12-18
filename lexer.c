@@ -25,12 +25,18 @@ void lex(char *sCode,struct token *rootToken){
 		nxt_token->type = NULL;
 		nxt_token->value = NULL;
 		nxt_token->next = NULL;
-		if (!(sCode[x] == ' ') && !isspace(sCode[x])){
+		if ((!(sCode[x] == ' ') && !isspace(sCode[x])) || sCode[x] == 39 || sCode[x] == '"'){
+			bool inApostrophe = sCode[x] == 39 || sCode[x] == '"';
 			char *str;
 			char *value = NULL;
 			char *type;
-			if (isalpha(sCode[x])){
-				int eI = stringLaH(sCode,x,sz,0); // ending index of string 
+			if (isalpha(sCode[x]) || inApostrophe){
+				int eI;
+				if (inApostrophe){
+					eI = stringLaH(sCode,x,sz,0,true); // ending index of string 
+				} else {
+					eI = stringLaH(sCode,x,sz,0,false); // ending index of string 					
+				}
 				value = malloc(sizeof(char)*(eI-x));
 				//printf("eI - x = %d\n",eI-x);
 				type = malloc(sizeof(char)*15);
@@ -42,6 +48,8 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				if (strcmp(value,"if") == 0){
 					strcpy(type,"conditional");
+				} else if (inApostrophe){
+					strcpy(type,"string");
 				}
 				else if (strcmp(value,"end") == 0){
 					strcpy(type,"end");
@@ -120,29 +128,38 @@ int numberLaH(char string[],int sI,size_t sz){ // number lookahead
 	return eI;
 }
 
-int stringLaH(char string[],int sI,size_t sz,int type){
+int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe){
 	// type 0 = symbol
 	// type 1 = number
 	int eI = sI; // eI is ending index ( the index where the last char is)
+	char oApostrophe; // opening apostrophe
 	if (type == 0){
 		if (!(isalpha(string[0]))){
-			return -1;
+			if (!(string[0] == 39 || string[0] == '"')){
+				return -1;
+			}
 		}
 	}
+	if (inApostrophe){
+		oApostrophe = string[sI];
+	}
 	for (int x=sI;x<sz;x++){
-		if (isspace(string[x])){
+		if (inApostrophe && string[x+1] == oApostrophe){ // 39 is ascii for signle quote
+				eI += 2;
 			break;
-		}
-		if (string[x] == '=' ||
-			string[x] == '+' ||
-			string[x] == '>' ||
-			string[x] == '<' ||
-			string[x] == '-' ||
-			string[x] == '/' || 
-			string[x] == ':' || 
-			string[x] == ';'){
-			break;
-			//TODO
+		} else {
+			if (isspace(string[x]) ||
+				string[x] == '=' ||
+				string[x] == '+' ||
+				string[x] == '>' ||
+				string[x] == '<' ||
+				string[x] == '-' ||
+				string[x] == '/' || 
+				string[x] == ':' || 
+				string[x] == ';'){
+				break;
+				//TODO
+			}
 		}
 		eI++;
 	}
