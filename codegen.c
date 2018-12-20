@@ -37,7 +37,7 @@ void generate(struct token *rootToken,char *code){
 		} else if (rootToken->type == ASSIGNMENT ||
 				   rootToken->type == OPERATOR ||
 				   rootToken->type == STRING || 
-				   rootToken->type == END ||
+				   rootToken->type == CURLYBRACE ||
 				   rootToken->type == NUMBER){
 			strcpy(code + sz,rootToken->value);
 			sz += count(rootToken->value);
