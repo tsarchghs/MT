@@ -1,9 +1,10 @@
 # MT
 The compiler skips the AST phase and produces the output based on only the tokens given.
-Currently it is in alpha stage and supports only integers.
+Currently it's in alpha stage.
 
 Sample code:
 ```javascript
+var str = "Hello, World!";
 var c = 1 + 2;
 var d = c + 1;
 
