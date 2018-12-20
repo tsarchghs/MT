@@ -5,9 +5,9 @@
 #include "parser.h"
 
 int main(int argc,char *argv[]){
-	char START[] = "int main() {";
-	char END[] = "}";
-	struct token rootToken = {.type="root",.value=NULL,.next=NULL};
+	char START_C[] = "int main() {";
+	char END_C[] = "}";
+	struct token rootToken = {.type=ROOT,.value=NULL,.next=NULL};
 	struct tree ast = {.type=NULL,.token=NULL,.next=NULL};
 	char code[1000];
 	ast.leftChild = malloc(sizeof(struct tree));
@@ -45,14 +45,14 @@ int main(int argc,char *argv[]){
 				struct token *cToken = &rootToken;
 				int x = 0;
 				while (cToken->next != NULL){
-					printf("<%d> Token: [%s] [%s] [%p]\n",x,cToken->type,cToken->value,cToken->next);
+					printf("<%d> Token: [%d] [%s] [%p]\n",x,cToken->type,cToken->value,cToken->next);
 					cToken = cToken->next;
 					x++;	
 				}
-				printf("<%d> Last token: [%s] [%s] [%p]\n",x,cToken->type,cToken->value,cToken->next);
+				printf("<%d> Last token: [%d] [%s] [%p]\n",x,cToken->type,cToken->value,cToken->next);
 				printf(">>> ");
 			} else if (strcmp(input,"show/rootToken") == 0){
-					printf("<%d> Root token : [%s] [%s] [%p]\n",0,rootToken.type,rootToken.value,rootToken.next);			
+					printf("<%d> Root token : [%d] [%s] [%p]\n",0,rootToken.type,rootToken.value,rootToken.next);			
 			}
 			 else {
 				lex(input,&rootToken);
@@ -68,7 +68,7 @@ int main(int argc,char *argv[]){
 	  printf("Error!");   
 	  exit(1);             
 	}
-	fprintf(fptr,"%s %s %s",START,code,END);
+	fprintf(fptr,"%s %s %s",START_C,code,END_C);
 	fclose(fptr);
 	system("clang o.c");
 	//remove("o.c");
