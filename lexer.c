@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "lexer.h"
+#include "helpers.h"
 
 //char numbers[] = {'0','1','2','3','4','5','6','7','8','9'};
 
@@ -22,7 +23,7 @@ void lex(char *sCode,struct token *rootToken){
 	for (int x=0;x<sz;x++){
 		tokenReturned = 1;
 		struct token *nxt_token = malloc(sizeof(struct token));
-		nxt_token->type = NULL;
+		nxt_token->type = 0;
 		nxt_token->value = NULL;
 		nxt_token->next = NULL;
 		if ((!(sCode[x] == ' ') && !isspace(sCode[x])) || sCode[x] == 39 || sCode[x] == '"'){
@@ -39,7 +40,6 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				value = malloc(sizeof(char)*(eI-x));
 				//printf("eI - x = %d\n",eI-x);
-				type = malloc(sizeof(char)*15);
 	 			nxt_token->value = value;
 				int error = sliceString(sCode,x,eI,sz,value);
 				if (error == -1){
@@ -47,39 +47,42 @@ void lex(char *sCode,struct token *rootToken){
 					break;
 				}
 				if (strcmp(value,"if") == 0){
-					strcpy(type,"conditional");
+					
 				} else if (inApostrophe){
-					strcpy(type,"string");
+					nxt_token->type = STRING;
 				}
 				else if (strcmp(value,"end") == 0){
-					strcpy(type,"end");
+					nxt_token->type = END;
 				} else if (strcmp(value,"var") == 0){
-					strcpy(type,"declaration");
+					nxt_token->type = DECLARATION;
 				}
 				 else {
-					strcpy(type,"symbol");
+					nxt_token->type = SYMBOL;
 				}
-	 			nxt_token->type = type;
 				x = eI - 1; // idk why it doesn't work without -1 :'(
-			} else if (sCode[x] == ';' || sCode[x] == ':' || (sCode[x] == 'e' && sCode[x+1] == 'n' && sCode[x+2] == 'd')){
-				type = malloc(sizeof(char) * 2);
-				type[0] = sCode[x];
-				type[1] = '\0';
-				nxt_token->type = type;
-	 			nxt_token->value = type;
+			} else if (sCode[x] == ';' || sCode[x] == ':'){
+				char *val = malloc(sizeof(char)*2);
+				val[0] = sCode[x];
+				val[1] = '\0';
+				if (sCode[x] == ';'){
+					nxt_token->type = CURLYBRACE;
+				} else {
+					nxt_token->type = COLON;
+				}
+	 			nxt_token->value = val;
 			}
 			else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || 
 					 sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
-				type = malloc(sizeof(char)*2);
 				value = malloc(sizeof(char)*2);
 				value[0] = sCode[x];
 				value[1] = '\0';
 				if (sCode[x] == '='){
-					strcpy(type,"assignment");
-				} else {
-					strcpy(type,"operator");
+					nxt_token->type = ASSIGNMENT;
+				} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/'){
+					nxt_token->type = OPERATOR;
+				} else if (sCode[x] == '<' || sCode[x] == '>'){
+					nxt_token->type = COMPARISION;
 				}
-				nxt_token->type = type;
 				nxt_token->value = value;
 			}
 			else if (isdigit(sCode[x])) {
@@ -91,9 +94,8 @@ void lex(char *sCode,struct token *rootToken){
 				str = malloc(sizeof(char)*(eI-x));
 				sliceString(sCode,x,eI,sz,str);
 				nxt_token->value = str;
-				type = malloc(sizeof(char)*(eI-x));
-				nxt_token->type = type;
-		 		strcpy(type,"number");
+				type = malloc(sizeof(int));
+				nxt_token->type = NUMBER;
 				x = eI - 1; // idk why it doesn't work without -1 :'(
 			} else {
 				printf("Syntax error --> %c\n",sCode[x]);
@@ -101,7 +103,7 @@ void lex(char *sCode,struct token *rootToken){
 			}
 			//printf("%p / %p\n",cToken->type,cToken->value);
 			if (tokenReturned){
-				printf("<%d> Token returned : [%s] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
+				printf("<%d> Token returned : [%d] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
 				cToken->next = nxt_token;
 				cToken = cToken->next;
 				n++;
