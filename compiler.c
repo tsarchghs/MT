@@ -2,16 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lexer.h"
-#include "parser.h"
+#include "helpers.h"
 
 int main(int argc,char *argv[]){
 	char START_C[] = "int main() {";
 	char END_C[] = "}";
 	struct token rootToken = {.type=ROOT,.value=NULL,.next=NULL};
-	struct tree ast = {.type=NULL,.token=NULL,.next=NULL};
 	char code[1000];
-	ast.leftChild = malloc(sizeof(struct tree));
-	ast.rightChild = malloc(sizeof(struct tree));
 	if (argc > 1){
 		char * buffer = 0;
 		long length;
