@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include "helpers.h"
 #include <stdbool.h>
 
 struct token
 {
-	char *type;
+	int type;
 	char *value;
 	struct token *next;
 };
