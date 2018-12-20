@@ -47,7 +47,7 @@ void lex(char *sCode,struct token *rootToken){
 					break;
 				}
 				if (strcmp(value,"if") == 0){
-					
+					nxt_token->type = CONDITIONAL;
 				} else if (inApostrophe){
 					nxt_token->type = STRING;
 				}
@@ -78,10 +78,8 @@ void lex(char *sCode,struct token *rootToken){
 				value[1] = '\0';
 				if (sCode[x] == '='){
 					nxt_token->type = ASSIGNMENT;
-				} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/'){
+				} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
 					nxt_token->type = OPERATOR;
-				} else if (sCode[x] == '<' || sCode[x] == '>'){
-					nxt_token->type = COMPARISION;
 				}
 				nxt_token->value = value;
 			}
