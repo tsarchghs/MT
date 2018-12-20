@@ -2,6 +2,20 @@
 #include <string.h>
 #include <stdio.h>
 
+const int ROOT = 0;
+const int DECLARATION = 10;
+const int ASSIGNMENT = 20;
+const int STRING = 30;
+const int NUMBER = 40;
+const int SYMBOL = 50;
+const int OPERATOR = 60;
+const int CURLYBRACE = 70;
+const int CONDITIONAL = 80;
+const int END = 90;
+const int IF = 100;
+const int COLON = 110;
+const int COMPARISION = 120;
+
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
 		printf("Warning: Ending index (eI=%d) bigger than size of char array\n",eI);
