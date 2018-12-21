@@ -63,7 +63,7 @@ void generate(struct token *rootToken,char *code){
 			}
 		} else if (rootToken->type == SYMBOL){
 			if (declaring && afterAssignment && convert && 
-					(strcmp(symbolLoc->symbol_token->value,rootToken->value)) == 0){
+					(symbolLoc != NULL && strcmp(symbolLoc->symbol_token->value,rootToken->value)) == 0){
 
 				strcpy(code + sz,symbolLoc->value);
 				sz += count(symbolLoc->value);
