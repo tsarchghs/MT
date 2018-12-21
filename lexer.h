@@ -8,6 +8,13 @@ struct token
 	struct token *next;
 };
 
+struct symbol
+{
+	struct token *symbol_token;
+	char *value;
+	int dataType;
+	struct symbol *next;
+};
 
 void lex(char *sCode,struct token *rootToken);
 int numberLaH(char string[],int sI,size_t sz); // number lookahead
