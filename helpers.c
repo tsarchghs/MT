@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include "lexer.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -35,6 +36,54 @@ int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	//printf("-123-%s\n",str);
 	strcpy(location,str);
 	return 0;
+}
+
+int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *location){ // declaration type look-a-head
+	/*
+		args:
+			symbol_token - used for checking symbol types when statement like 
+				"var a = b;" -> checks for 'b' type
+			location - if dtLaH returns 1 or 2 then it will store the variable's symbol token to wherever
+				'location' is pointing  
+
+		returns:
+			 1 - when variable is assigned to another variable and that variable has a type of int
+			 2 - when variable is assigned to another variable and that variable has a type of string
+			-1 - when dLookahead can't predict declaration type ( syntax error )
+			-3 - when variable assigned to a variable that is not declared
+	*/
+	if (token->next->next->type == ASSIGNMENT){
+		struct token *assignmentT = token->next->next;
+		if (assignmentT->next->type  == NUMBER){
+			return NUMBER;
+		} else if (assignmentT->next->type  == STRING){
+			return STRING;
+		} else if (assignmentT->next->type  == SYMBOL){
+			struct token *cToken = assignmentT->next;
+			struct symbol *sToken = symbol_token;
+			int found = 0;
+			while (sToken != NULL){
+				if (sToken->symbol_token != NULL && cToken != NULL && strcmp(sToken->symbol_token->value,cToken->value) == 0){
+					found = 1;
+					*location = *sToken;
+					break;
+				}
+				sToken = sToken->next;
+			}
+			if (found){
+				if (sToken->dataType == NUMBER){
+					return 1;
+				} else if (sToken->dataType == STRING){
+					return 2;
+				}
+			} else {
+				printf("Parse error\n");
+				return -3;
+			}
+			printf("%s\n",assignmentT->next->value);
+		}
+	}
+	return -1;
 }
 
 int count(char string[]){
