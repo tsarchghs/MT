@@ -70,8 +70,20 @@ void lex(char *sCode,struct token *rootToken){
 					nxt_token->type = COLON;
 				}
 	 			nxt_token->value = val;
-			}
-			else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || 
+
+			} else if (
+					(sCode[x] == '>' && sCode[x+1] == '=') ||
+					(sCode[x] == '<' && sCode[x+1] == '=') ||
+					(sCode[x] == '=' && sCode[x+1] == '=')
+				){
+				value = malloc(sizeof(char)*3);
+				value[0] = sCode[x];
+				value[1] = sCode[x+1];
+				value[2] = '\0';
+				nxt_token->type = OPERATOR;
+				nxt_token->value = value;	
+				x++;			
+			} else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || 
 					 sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
 				value = malloc(sizeof(char)*2);
 				value[0] = sCode[x];
@@ -82,8 +94,7 @@ void lex(char *sCode,struct token *rootToken){
 					nxt_token->type = OPERATOR;
 				}
 				nxt_token->value = value;
-			}
-			else if (isdigit(sCode[x])) {
+			} else if (isdigit(sCode[x])) {
 				int eI = numberLaH(sCode,x,sz);
 				if (eI == 500){ // 500 means that number is followed by letters which result in bad variable name error
 					printf("Error: Invalid variable name\n");
