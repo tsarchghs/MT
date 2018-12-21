@@ -61,29 +61,37 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 		} else if (assignmentT->next->type  == SYMBOL){
 			struct token *cToken = assignmentT->next;
 			struct symbol *sToken = symbol_token;
-			int found = 0;
-			while (sToken != NULL){
-				if (sToken->symbol_token != NULL && cToken != NULL && strcmp(sToken->symbol_token->value,cToken->value) == 0){
-					found = 1;
-					*location = *sToken;
-					break;
-				}
-				sToken = sToken->next;
-			}
+			struct symbol *symbolPtr = malloc(sizeof(struct symbol));
+			int found = findSymbol(symbol_token,cToken->value,symbolPtr);
 			if (found){
-				if (sToken->dataType == NUMBER){
+				*location = *symbolPtr;
+				if (symbolPtr->dataType == NUMBER){
 					return 1;
-				} else if (sToken->dataType == STRING){
+				} else if (symbolPtr->dataType == STRING){
 					return 2;
 				}
 			} else {
-				printf("Parse error\n");
+				printf("Parse error (-3)\nCoudn't find %s\n",sToken->value);
 				return -3;
 			}
 			printf("%s\n",assignmentT->next->value);
 		}
 	}
 	return -1;
+}
+
+int findSymbol(struct symbol *root_symbol,char *name,struct symbol *location){ // find symbol value
+	struct symbol *sToken = root_symbol;
+	while (sToken != NULL){
+		if (sToken->symbol_token != NULL && strcmp(sToken->symbol_token->value,name) == 0){
+			printf("[%s] ---\n",sToken->value);
+			*location = *sToken;
+			findSymbol(root_symbol,sToken->value,location);
+			return 1;
+		}
+		sToken = sToken->next;
+	}
+	return 0;	
 }
 
 int count(char string[]){
