@@ -12,6 +12,7 @@ const int CONDITIONAL ;
 const int END ;
 const int COLON;
 const int COMMENT;
+const int PARENTHESIS;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location);
 int count(char string[]);
