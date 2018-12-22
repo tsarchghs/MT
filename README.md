@@ -2,7 +2,8 @@
 The compiler skips the AST phase and produces the output based on only the tokens given.
 Currently it's in alpha stage.
 
-```./compiler <file>```
+Usage: ```./compiler <file>``` <br>
+If the executable code (```./compiler```) doesn't work for your machine compile with ```make```<br>
 For the compiler to work you must have C's clang compiler. (<a href="https://clang.llvm.org/get_started.html">Building and Running Clang</a>)<br>
 Sample code:
 ```javascript
