@@ -111,10 +111,12 @@ void generate(struct token *rootToken,char *code){
 			} else {
 				strcpy(code + sz,rootToken->value);
 				sz += count(rootToken->value);
-		}
-			code[sz] = '(';
-			sz++;
-			inConditional = 1;
+			}
+			if (!(strcmp(rootToken->value,"else") == 0)){
+				inConditional = 1;
+				code[sz] = '(';
+				sz++;
+			}
 		}
 		rootToken = rootToken->next;
 	} while (rootToken != NULL); // make sure to add support for last token
