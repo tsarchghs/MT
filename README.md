@@ -6,16 +6,21 @@ Currently it's in alpha stage.
 For the compiler to work you must have C's clang compiler. (<a href="https://clang.llvm.org/get_started.html">Building and Running Clang</a>)<br>
 Sample code:
 ```javascript
-var dogg = "gjergj";
-var dogg_copy = dogg;
-var d = 1;
-var c = 2;
-
-if d >= c:
-	if c <= d:
-		if d == c:
-			d = 1;
-		end
+var name = "gjergj";
+var name_copy = name;
+var x = 1;
+var y = 2 + 5 / 2;
+var z = y;
+// Example of nested conditional statements
+if x >= y: // Conditional statements end with the keyword 'end'
+	if z <= x: 
+		z = x + y;
+	end
+	elif z >= x:
+		z = x - y;
+	end
+	else:
+		x = y;
 	end
 end
 ```
