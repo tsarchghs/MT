@@ -83,7 +83,7 @@ void lex(char *sCode,struct token *rootToken){
 				value[2] = '\0';
 				if (sCode[x] == '/' && sCode[x+1] == '/'){
 					nxt_token->type = COMMENT;
-					while (sCode[x+1] != '\n'){ // Ignore everything after '//'
+					while (sCode[x+2] != '\n'){ // Ignore everything after '//'
 						x++;
 					};
 				} else {
