@@ -105,8 +105,13 @@ void generate(struct token *rootToken,char *code){
 			code[sz] = '{';
 			sz++;
 		} else if (rootToken->type == CONDITIONAL){
-			strcpy(code + sz,rootToken->value);
-			sz += count(rootToken->value);
+			if (strcmp(rootToken->value,"elif") == 0){
+				strcpy(code + sz,"else if");
+				sz += 7;
+			} else {
+				strcpy(code + sz,rootToken->value);
+				sz += count(rootToken->value);
+		}
 			code[sz] = '(';
 			sz++;
 			inConditional = 1;
