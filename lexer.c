@@ -74,13 +74,18 @@ void lex(char *sCode,struct token *rootToken){
 			} else if (
 					(sCode[x] == '>' && sCode[x+1] == '=') ||
 					(sCode[x] == '<' && sCode[x+1] == '=') ||
-					(sCode[x] == '=' && sCode[x+1] == '=')
+					(sCode[x] == '=' && sCode[x+1] == '=') ||
+					(sCode[x] == '/' && sCode[x+1] == '/')
 				){
 				value = malloc(sizeof(char)*3);
 				value[0] = sCode[x];
 				value[1] = sCode[x+1];
 				value[2] = '\0';
-				nxt_token->type = OPERATOR;
+				if (sCode[x] == '/' && sCode[x+1] == '/'){
+					nxt_token->type = COMMENT;
+				} else {
+					nxt_token->type = OPERATOR;
+				}
 				nxt_token->value = value;	
 				x++;			
 			} else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || 
