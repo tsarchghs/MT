@@ -56,6 +56,11 @@ void lex(char *sCode,struct token *rootToken){
 					nxt_token->type = STRING;
 				} else if (strcmp(value,"end") == 0){
 					nxt_token->type = END;
+				} else if (
+						strcmp(value,"or") == 0 || 
+						strcmp(value,"and") == 0
+					){
+					nxt_token->type = OPERATOR;
 				} else if (strcmp(value,"var") == 0){
 					nxt_token->type = DECLARATION;
 				}
@@ -94,8 +99,8 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				nxt_token->value = value;	
 				x++;			
-			} else if (sCode[x] == '=' || sCode[x] == '+' || sCode[x] == '-' || 
-					 sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
+			} else if (sCode[x] == '=' || sCode[x] == '(' || sCode[x] == ')' || sCode[x] == '+' || 
+					   sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
 				value = malloc(sizeof(char)*2);
 				value[0] = sCode[x];
 				value[1] = '\0';
@@ -103,6 +108,8 @@ void lex(char *sCode,struct token *rootToken){
 					nxt_token->type = ASSIGNMENT;
 				} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
 					nxt_token->type = OPERATOR;
+				} else if (sCode[x] == '(' || sCode[x] == ')'){
+					nxt_token->type = PARENTHESIS;
 				}
 				nxt_token->value = value;
 			} else if (isdigit(sCode[x])) {
