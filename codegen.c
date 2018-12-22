@@ -89,12 +89,28 @@ void generate(struct token *rootToken,char *code){
 		} else if (rootToken->type == ASSIGNMENT ||
 				   rootToken->type == OPERATOR ||
 				   rootToken->type == STRING || 
+				   rootToken->type == PARENTHESIS ||
 				   rootToken->type == SEMICOLON ||
 				   rootToken->type == NUMBER){
 			if (rootToken->type == ASSIGNMENT){
 				afterAssignment = 1;
 			}
-			strcpy(code + sz,rootToken->value);
+			int done = 0;
+			if (rootToken->type == OPERATOR){
+				if (strcmp(rootToken->value,"or") == 0){
+					strcpy(code + sz,"||");
+					done = 1;
+				} else if (strcmp(rootToken->value,"and") == 0){
+					strcpy(code + sz,"&&");
+					done = 1;
+					sz--; // because later on it will be incremented by 3 because rootToken->value length is 3
+						  // but we since we copied "&&" instead of "and" to pointer -> code + sz we want sz to be incremented
+						  // by only 2
+				}
+			}
+			if (!done){
+				strcpy(code + sz,rootToken->value);
+			}
 			sz += count(rootToken->value);
 			code[sz] = ' ';
 			sz++;
