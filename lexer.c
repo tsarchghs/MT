@@ -46,12 +46,15 @@ void lex(char *sCode,struct token *rootToken){
 					printf("Error: Invalid variable name\n");
 					break;
 				}
-				if (strcmp(value,"if") == 0){
+				if (
+						strcmp(value,"if") == 0 || 
+						strcmp(value,"elif") == 0 ||
+						strcmp(value,"else") == 0
+					){
 					nxt_token->type = CONDITIONAL;
 				} else if (inApostrophe){
 					nxt_token->type = STRING;
-				}
-				else if (strcmp(value,"end") == 0){
+				} else if (strcmp(value,"end") == 0){
 					nxt_token->type = END;
 				} else if (strcmp(value,"var") == 0){
 					nxt_token->type = DECLARATION;
