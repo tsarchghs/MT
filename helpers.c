@@ -14,6 +14,7 @@ const int SEMICOLON = 70;
 const int CONDITIONAL = 80;
 const int END = 90;
 const int COLON = 100;
+const int COMMENT = 110;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){

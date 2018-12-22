@@ -11,6 +11,7 @@ const int SEMICOLON ;
 const int CONDITIONAL ;
 const int END ;
 const int COLON;
+const int COMMENT;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location);
 int count(char string[]);
