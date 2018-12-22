@@ -65,7 +65,7 @@ void lex(char *sCode,struct token *rootToken){
 				val[0] = sCode[x];
 				val[1] = '\0';
 				if (sCode[x] == ';'){
-					nxt_token->type = CURLYBRACE;
+					nxt_token->type = SEMICOLON;
 				} else {
 					nxt_token->type = COLON;
 				}

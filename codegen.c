@@ -89,7 +89,7 @@ void generate(struct token *rootToken,char *code){
 		} else if (rootToken->type == ASSIGNMENT ||
 				   rootToken->type == OPERATOR ||
 				   rootToken->type == STRING || 
-				   rootToken->type == CURLYBRACE ||
+				   rootToken->type == SEMICOLON ||
 				   rootToken->type == NUMBER){
 			if (rootToken->type == ASSIGNMENT){
 				afterAssignment = 1;
