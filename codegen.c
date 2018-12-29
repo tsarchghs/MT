@@ -22,7 +22,7 @@ void generate(struct token *rootToken,char *code){
 			declaring = 1;
 			symbolLoc = malloc(sizeof(struct symbol));
 			int decl_type = dtLaH(rootToken,&root_symbol,symbolLoc);
-			if (decl_type == 1 || decl_type == 2){
+			if (decl_type == 1 || decl_type == 2 || decl_type == 3){
 				convert = 1;
 				nxtSymbol->symbol_token = rootToken->next->next->next;
 				if (symbolLoc->dataType == INTEGER){
