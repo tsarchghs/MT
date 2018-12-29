@@ -5,13 +5,13 @@
 #include "helpers.h"
 
 int main(int argc,char *argv[]){
-	char START_C[] = "struct mt_object { \
-						int type; \
-						char string; \
-						int integer; \
-						float float_; \
-					}; \
- 					int main() {";
+	char START_C[] = "struct mt_object {\
+int type;\
+char string;\
+int integer;\
+float float_;\
+};\
+int main() {\n";
 	char END_C[] = "}";
 	struct token rootToken = {.type=ROOT,.value=NULL,.next=NULL};
 	char code[1000];
