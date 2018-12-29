@@ -52,15 +52,18 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 		returns:
 			 1 - when variable is assigned to another variable and that variable has a type of int
 			 2 - when variable is assigned to another variable and that variable has a type of string
+			 3 - when variable is assigned to another variable and that variable has a type of float
 			-1 - when dLookahead can't predict declaration type ( syntax error )
 			-3 - when variable assigned to a variable that is not declared
 	*/
 	if (token->next->next->type == ASSIGNMENT){
 		struct token *assignmentT = token->next->next;
-		if (assignmentT->next->type  == INTEGER){
-			return INTEGER;
-		} else if (assignmentT->next->type  == STRING){
-			return STRING;
+		if (assignmentT->next->type == INTEGER ||
+			assignmentT->next->type == FLOAT_ || 
+			assignmentT->next->type == STRING){
+			
+			return assignmentT->next->type;
+
 		} else if (assignmentT->next->type  == SYMBOL){
 			struct token *cToken = assignmentT->next;
 			struct symbol *sToken = symbol_token;
@@ -72,6 +75,8 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 					return 1;
 				} else if (symbolPtr->dataType == STRING){
 					return 2;
+				} else if (symbolPtr->dataType == FLOAT_){
+					return 3;
 				}
 			} else {
 				printf("Parse error (-3)\nCoudn't find %s\n",sToken->value);
