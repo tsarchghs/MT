@@ -7,7 +7,7 @@ const int ROOT = 0;
 const int DECLARATION = 10;
 const int ASSIGNMENT = 20;
 const int STRING = 30;
-const int NUMBER = 40;
+const int INTEGER = 40;
 const int SYMBOL = 50;
 const int OPERATOR = 60;
 const int SEMICOLON = 70;
@@ -16,6 +16,7 @@ const int END = 90;
 const int COLON = 100;
 const int COMMENT = 110;
 const int PARENTHESIS = 120;
+const int FLOAT_ = 130;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
@@ -56,8 +57,8 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 	*/
 	if (token->next->next->type == ASSIGNMENT){
 		struct token *assignmentT = token->next->next;
-		if (assignmentT->next->type  == NUMBER){
-			return NUMBER;
+		if (assignmentT->next->type  == INTEGER){
+			return INTEGER;
 		} else if (assignmentT->next->type  == STRING){
 			return STRING;
 		} else if (assignmentT->next->type  == SYMBOL){
@@ -67,7 +68,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			int found = findSymbol(symbol_token,cToken->value,symbolPtr);
 			if (found){
 				*location = *symbolPtr;
-				if (symbolPtr->dataType == NUMBER){
+				if (symbolPtr->dataType == INTEGER){
 					return 1;
 				} else if (symbolPtr->dataType == STRING){
 					return 2;
