@@ -113,7 +113,8 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				nxt_token->value = value;
 			} else if (isdigit(sCode[x])) {
-				int eI = numberLaH(sCode,x,sz);
+				int isFloat = 0;
+				int eI = numberLaH(sCode,x,sz,&isFloat);
 				if (eI == 500){ // 500 means that number is followed by letters which result in bad variable name error
 					printf("Error: Invalid variable name\n");
 					break;			
@@ -122,7 +123,11 @@ void lex(char *sCode,struct token *rootToken){
 				sliceString(sCode,x,eI,sz,str);
 				nxt_token->value = str;
 				type = malloc(sizeof(int));
-				nxt_token->type = NUMBER;
+				if (isFloat){
+					nxt_token->type = FLOAT_;
+				} else {
+					nxt_token->type = INTEGER;
+				}
 				x = eI - 1; // idk why it doesn't work without -1 :'(
 			} else {
 				printf("Syntax error --> %c\n",sCode[x]);
@@ -140,17 +145,22 @@ void lex(char *sCode,struct token *rootToken){
 	//printf(">>> ");
 }
 
-int numberLaH(char string[],int sI,size_t sz){ // number lookahead
+int numberLaH(char string[],int sI,size_t sz,int *isFloat){ // number lookahead
 	// sI is starting index
 	//printf("source sI = %c\n",string[sI]);
 	//printf("Size = %zu\n",sz);
 	int eI = sI; // eI is ending index ( the index where the last number is)
 	for (int x=sI;x<sz;x++){
-		if (isalpha(string[x])){
+		if (string[x] == '.' && isdigit(string[x+1])){
+			*isFloat = 1;
+		} else if (isalpha(string[x])){
+			printf("DSAD --> %c\n",string[x]);
 			return 500;
 		}
 		if (string[x] < 48 || string[x] > 57 || string[x] == ';')	{
-			break;
+			if (string[x] != '.'){
+				break;
+			}
 		}
 		eI++;
 	}
