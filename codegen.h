@@ -2,8 +2,8 @@
 
 struct mt_object {
 	int type;
-	char *string;
-	int *integer;
-	float *floating;
+	int integer;
+	float float_;
+	char string[];
 };
 void generate(struct token *rootToken,char *code);
