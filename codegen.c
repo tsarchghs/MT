@@ -6,6 +6,7 @@ void generate(struct token *rootToken,char *code){
 	int sz = 0;
 	int inConditional = 0;
 	int isInt = 0;
+	int isFloat = 0;
 	int isString = 0;
 	int declaring = 0;
 	int afterAssignment = 0;
@@ -26,11 +27,12 @@ void generate(struct token *rootToken,char *code){
 				nxtSymbol->symbol_token = rootToken->next->next->next;
 				if (symbolLoc->dataType == INTEGER){
 					isInt = 1;
-					nxtSymbol->dataType = INTEGER;
+				} else if (symbolLoc->dataType == FLOAT_){
+					isFloat = 1;
 				} else if (symbolLoc->dataType == STRING) {
 					isString = 1;
-					nxtSymbol->dataType = STRING;
 				}
+				nxtSymbol->dataType = symbolLoc->dataType;
 
 				cSymbol->next = nxtSymbol;
 				cSymbol = cSymbol->next;
@@ -47,6 +49,9 @@ void generate(struct token *rootToken,char *code){
 					//printf("cSymbol -> [%s] [%d] [%s]\n",cSymbol->symbol_token->value,cSymbol->dataType,cSymbol->value);
 					if (decl_type == INTEGER){
 						isInt = 1;
+					} else if (decl_type == FLOAT_){
+						isFloat = 1;
+						printf("FLOATING");
 					} else {
 						isString = 1;
 					}
@@ -56,6 +61,10 @@ void generate(struct token *rootToken,char *code){
 				strcpy(code+sz,"int ");
 				sz += 4;
 				isInt = 0;
+			} else if (isFloat){
+				strcpy(code+sz,"float ");
+				sz += 6;
+				isFloat = 0;
 			} else if (isString) {
 				strcpy(code+sz,"char ");
 				isString = 1;
@@ -91,7 +100,8 @@ void generate(struct token *rootToken,char *code){
 				   rootToken->type == STRING || 
 				   rootToken->type == PARENTHESIS ||
 				   rootToken->type == SEMICOLON ||
-				   rootToken->type == INTEGER){
+				   rootToken->type == INTEGER || 
+				   rootToken->type == FLOAT_){
 			if (rootToken->type == ASSIGNMENT){
 				afterAssignment = 1;
 			}
