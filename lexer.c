@@ -154,7 +154,6 @@ int numberLaH(char string[],int sI,size_t sz,int *isFloat){ // number lookahead
 		if (string[x] == '.' && isdigit(string[x+1])){
 			*isFloat = 1;
 		} else if (isalpha(string[x])){
-			printf("DSAD --> %c\n",string[x]);
 			return 500;
 		}
 		if (string[x] < 48 || string[x] > 57 || string[x] == ';')	{
