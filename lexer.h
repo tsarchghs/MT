@@ -17,5 +17,5 @@ struct symbol
 };
 
 void lex(char *sCode,struct token *rootToken);
-int numberLaH(char string[],int sI,size_t sz); // number lookahead
+int numberLaH(char string[],int sI,size_t sz,int *isFloat); // number lookahead
 int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe); // string lookahead
