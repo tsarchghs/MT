@@ -24,9 +24,9 @@ void generate(struct token *rootToken,char *code){
 			if (decl_type == 1 || decl_type == 2){
 				convert = 1;
 				nxtSymbol->symbol_token = rootToken->next->next->next;
-				if (symbolLoc->dataType == NUMBER){
+				if (symbolLoc->dataType == INTEGER){
 					isInt = 1;
-					nxtSymbol->dataType = NUMBER;
+					nxtSymbol->dataType = INTEGER;
 				} else if (symbolLoc->dataType == STRING) {
 					isString = 1;
 					nxtSymbol->dataType = STRING;
@@ -45,7 +45,7 @@ void generate(struct token *rootToken,char *code){
 					cSymbol->next = nxtSymbol;
 					cSymbol = cSymbol->next;
 					//printf("cSymbol -> [%s] [%d] [%s]\n",cSymbol->symbol_token->value,cSymbol->dataType,cSymbol->value);
-					if (decl_type == NUMBER){
+					if (decl_type == INTEGER){
 						isInt = 1;
 					} else {
 						isString = 1;
@@ -91,7 +91,7 @@ void generate(struct token *rootToken,char *code){
 				   rootToken->type == STRING || 
 				   rootToken->type == PARENTHESIS ||
 				   rootToken->type == SEMICOLON ||
-				   rootToken->type == NUMBER){
+				   rootToken->type == INTEGER){
 			if (rootToken->type == ASSIGNMENT){
 				afterAssignment = 1;
 			}
