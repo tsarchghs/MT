@@ -5,5 +5,5 @@ struct mt_object {
 	char *string;
 	int *integer;
 	float *floating;
-}
+};
 void generate(struct token *rootToken,char *code);
