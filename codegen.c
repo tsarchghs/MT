@@ -10,6 +10,7 @@ void generate(struct token *rootToken,char *code){
 	int isString = 0;
 	int declaring = 0;
 	int afterAssignment = 0;
+	int mt_object_type = 0;
 	struct symbol root_symbol = {.next=NULL,.value=NULL,.symbol_token=NULL,.dataType=0};
 	//strcpy(code,START);
 	//sz += sizeof(START) / sizeof(START[0]);
@@ -25,13 +26,7 @@ void generate(struct token *rootToken,char *code){
 			if (decl_type == 1 || decl_type == 2 || decl_type == 3){
 				convert = 1;
 				nxtSymbol->symbol_token = rootToken->next->next->next;
-				if (symbolLoc->dataType == INTEGER){
-					isInt = 1;
-				} else if (symbolLoc->dataType == FLOAT_){
-					isFloat = 1;
-				} else if (symbolLoc->dataType == STRING) {
-					isString = 1;
-				}
+				mt_object_type = decl_type;
 				nxtSymbol->dataType = symbolLoc->dataType;
 
 				cSymbol->next = nxtSymbol;
@@ -47,48 +42,27 @@ void generate(struct token *rootToken,char *code){
 					cSymbol->next = nxtSymbol;
 					cSymbol = cSymbol->next;
 					//printf("cSymbol -> [%s] [%d] [%s]\n",cSymbol->symbol_token->value,cSymbol->dataType,cSymbol->value);
-					if (decl_type == INTEGER){
-						isInt = 1;
-					} else if (decl_type == FLOAT_){
-						isFloat = 1;
-						printf("FLOATING");
-					} else {
-						isString = 1;
-					}
+					mt_object_type = decl_type;
 				}
-			}
-			if (isInt){
-				strcpy(code+sz,"int ");
-				sz += 4;
-				isInt = 0;
-			} else if (isFloat){
-				strcpy(code+sz,"float ");
-				sz += 6;
-				isFloat = 0;
-			} else if (isString) {
-				strcpy(code+sz,"char ");
-				isString = 1;
-				sz += 5;
+				char repr[] = "struct mt_object ";
+				strcpy(code + sz,repr);
+				sz += count(repr);
+
 			}
 		} else if (rootToken->type == SYMBOL){
-			if (declaring && afterAssignment && convert && 
-					(symbolLoc != NULL && strcmp(symbolLoc->symbol_token->value,rootToken->value)) == 0){
-
-				strcpy(code + sz,symbolLoc->value);
-				sz += count(symbolLoc->value);
+			if (declaring){
+				char repr[] = "%s = {.type=%d,.integer=%s}";
+				char repr2[500];
+				//printf("%d - %s - %d - %s \n",symbolLoc->dataType,symbolLoc->value,symbolLoc->symbol_token->type,symbolLoc->symbol_token->value);
+				sprintf(repr2,repr,rootToken->value,
+					rootToken->next->next->type,
+					rootToken->next->next->value);
+				rootToken = rootToken->next->next;
+				strcpy(code + sz,repr2);
+				sz += count(repr2);
 				code[sz] = ' ';
 				sz++;
 				convert = 0;
-			} else {
-				strcpy(code + sz,rootToken->value);
-				sz += count(rootToken->value);
-				code[sz] = ' ';
-				sz++;
-			}
-			if (isString){
-				strcpy(code+sz,"[] ");
-				sz += 3;
-				isString = 0;
 			}
 			if (rootToken->next != NULL && rootToken->next->type == COLON && inConditional){
 				code[sz] = ')';
