@@ -26,17 +26,13 @@ int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 		printf("ERROR: Location is NULL\n");
 		return -1;
 	}
-	//char *str = malloc(sizeof(char) * (eI - sI)); // Ending index - starting index
-	//printf("%d-%d-%d\n",eI,sI,1);
 	char str[eI-sI+1];
 	int i = 0;
 	for (int x=sI;x<eI;x++){
 		str[i] = string[x];
 		i++;	
 	}
-	//printf("%d-\n"); 	
 	str[i] = '\0';
-	//printf("-123-%s\n",str);
 	strcpy(location,str);
 	return 0;
 }
@@ -83,7 +79,6 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 				printf("Parse error (-3)\nCoudn't find %s\n",sToken->value);
 				return -3;
 			}
-			printf("%s\n",assignmentT->next->value);
 		} else if (assignmentT->next->next->type != SEMICOLON){
 			return 4;
 		}
@@ -95,7 +90,6 @@ int findSymbol(struct symbol *root_symbol,char *name,struct symbol *location){ /
 	struct symbol *sToken = root_symbol;
 	while (sToken != NULL){
 		if (sToken->symbol_token != NULL && strcmp(sToken->symbol_token->value,name) == 0){
-			printf("[%s] ---\n",sToken->value);
 			*location = *sToken;
 			findSymbol(root_symbol,sToken->value,location);
 			return 1;
