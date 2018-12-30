@@ -7,9 +7,9 @@
 int main(int argc,char *argv[]){
 	char START_C[] = "struct mt_object {\
 int type;\
-char string;\
 int integer;\
 float float_;\
+char string[];\
 };\
 int main() {\n";
 	char END_C[] = "}";
