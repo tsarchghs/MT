@@ -61,6 +61,12 @@ void generate(struct token *rootToken,char *code){
 						"integer",
 						symbolLoc->symbol_token->value,
 						"integer");
+				} else 	if (symbolLoc->dataType == FLOAT_){
+					sprintf(repr2,repr,
+						symbolLoc->dataType,
+						"float_",
+						symbolLoc->symbol_token->value,
+						"float_");
 				}
 				strcpy(code + sz,repr2);
 				sz += count(repr2);
@@ -104,7 +110,7 @@ void generate(struct token *rootToken,char *code){
 				char repr[] = "{.type=%d,.%s=";
 				char repr2[500];
 				if (isF){
-					sprintf(repr2,repr,FLOAT_,"float");
+					sprintf(repr2,repr,FLOAT_,"float_");
 				} else {
 					sprintf(repr2,repr,INTEGER,"integer");					
 				}
