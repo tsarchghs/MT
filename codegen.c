@@ -7,9 +7,6 @@
 void generate(struct token *rootToken,char *code){
 	int sz = 0;
 	int inConditional = 0;
-	int isInt = 0;
-	int isFloat = 0;
-	int isString = 0;
 	int declaring = 0;
 	int afterAssignment = 0;
 	int mt_object_type = 0;
