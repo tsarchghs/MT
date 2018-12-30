@@ -75,13 +75,28 @@ void generate(struct token *rootToken,char *code){
 				afterAssignment = 0;
 				declaring = 0;
 			} else {
-				if (declaring && rootToken->next->next->type == SYMBOL){
-					strcpy(code + sz," struct mt_object ");
-					sz += 18;
+				if (declaring){ // rootToken->next->next->type == SYMBOL
+					strcpy(code + sz,rootToken->value);
+					sz += count(rootToken->value);
+				} else {
+					struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
+					int found_symbol = findSymbol(&root_symbol,rootToken->value,tmpSymbol);
+					if (found_symbol){
+						strcpy(code + sz,rootToken->value);
+						sz += count(rootToken->value);
+						code[sz] = ' ';
+						if (tmpSymbol->dataType == INTEGER){
+							strcpy(code + sz,".integer ");
+							sz += 9;
+						} else if (tmpSymbol->dataType == FLOAT_){
+							strcpy(code + sz,".float_ ");
+							sz += 8;
+						}
+						printf("'--> %d\n",tmpSymbol->dataType);
+					} else {
+						printf("ERROR: %s is undefined\n",rootToken->value);
+					}
 				}
-				strcpy(code + sz,rootToken->value);
-				sz += count(rootToken->value);
-				code[sz] = ' ';
 			}
 			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && inConditional){
 				code[sz] = ')';
@@ -125,6 +140,7 @@ void generate(struct token *rootToken,char *code){
 				strcpy(code + sz,"}");
 				sz++;
 				afterAssignment = 0;
+				declaring = 0;
 			}
 			if (rootToken->type == ASSIGNMENT){
 				afterAssignment = 1;
