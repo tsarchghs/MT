@@ -3,6 +3,7 @@
 #include <string.h>
 #include "lexer.h"
 #include "helpers.h"
+#include "codegen.h"
 
 int main(int argc,char *argv[]){
 	char START_C[] = "struct mt_object {\
@@ -37,7 +38,7 @@ int main() {\n";
 		if (buffer){
 			//printf("%s\n",buffer);
 			lex(buffer,&rootToken);
-			generate(&rootToken,&code);
+			generate(&rootToken,&code[0]);
 		}
 	} else {
 		char *input = malloc(sizeof(char) * 255);
@@ -59,7 +60,7 @@ int main() {\n";
 			}
 			 else {
 				lex(input,&rootToken);
-				generate(&rootToken,&code);	
+				generate(&rootToken,&code[0]);	
 			}
 		}
 	}
