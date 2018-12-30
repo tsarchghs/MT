@@ -42,7 +42,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 		args:
 			symbol_token - used for checking symbol types when statement like 
 				"var a = b;" -> checks for 'b' type
-			location - if dtLaH returns 1 or 2 then it will store the variable's symbol token to wherever
+			location - if dtLaH returns 1,2 or 3 then it will store the variable's symbol token to wherever
 				'location' is pointing  
 
 		returns:
