@@ -25,7 +25,9 @@ void generate(struct token *rootToken,char *code){
 			int decl_type = dtLaH(rootToken,&root_symbol,symbolLoc);
 			if (decl_type == 1 || decl_type == 2 || decl_type == 3){
 				convert = 1;
-				nxtSymbol->symbol_token = rootToken->next->next->next;
+				struct token *assignmentT = rootToken->next->next;
+				nxtSymbol->value = assignmentT->next->value;
+				nxtSymbol->symbol_token = rootToken->next;
 				mt_object_type = decl_type;
 				nxtSymbol->dataType = symbolLoc->dataType;
 
@@ -75,10 +77,12 @@ void generate(struct token *rootToken,char *code){
 				afterAssignment = 0;
 				declaring = 0;
 			} else {
-				if (declaring){ // rootToken->next->next->type == SYMBOL
+				if (declaring && rootToken->next->next->type == SYMBOL){ //
+					strcpy(code + sz," struct mt_object ");
+					sz += 18;
 					strcpy(code + sz,rootToken->value);
 					sz += count(rootToken->value);
-				} else {
+				} else if (!declaring) {
 					struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
 					int found_symbol = findSymbol(&root_symbol,rootToken->value,tmpSymbol);
 					if (found_symbol){
@@ -96,6 +100,9 @@ void generate(struct token *rootToken,char *code){
 					} else {
 						printf("ERROR: %s is undefined\n",rootToken->value);
 					}
+				} else {
+					strcpy(code + sz,rootToken->value);
+					sz += count(rootToken->value);				
 				}
 			}
 			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && inConditional){
