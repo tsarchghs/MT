@@ -53,6 +53,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			 1 - when variable is assigned to another variable and that variable has a type of int
 			 2 - when variable is assigned to another variable and that variable has a type of string
 			 3 - when variable is assigned to another variable and that variable has a type of float
+			 4 - when after the assignment operator there is more than 1 token -> ex var a = b + 1;
 			-1 - when dLookahead can't predict declaration type ( syntax error )
 			-3 - when variable assigned to a variable that is not declared
 	*/
@@ -64,7 +65,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			
 			return assignmentT->next->type;
 
-		} else if (assignmentT->next->type  == SYMBOL){
+		} else if (assignmentT->next->type == SYMBOL && assignmentT->next->next->type == SEMICOLON){
 			struct token *cToken = assignmentT->next;
 			struct symbol *sToken = symbol_token;
 			struct symbol *symbolPtr = malloc(sizeof(struct symbol));
@@ -83,6 +84,8 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 				return -3;
 			}
 			printf("%s\n",assignmentT->next->value);
+		} else if (assignmentT->next->next->type != SEMICOLON){
+			return 4;
 		}
 	}
 	return -1;
