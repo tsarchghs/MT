@@ -73,8 +73,9 @@ void generate(struct token *rootToken,char *code){
 				convert = 0;
 				printf("11123\n");
 				afterAssignment = 0;
+				declaring = 0;
 			} else {
-				if (rootToken->next->next->type == SYMBOL){
+				if (declaring && rootToken->next->next->type == SYMBOL){
 					strcpy(code + sz," struct mt_object ");
 					sz += 18;
 				}
@@ -96,7 +97,7 @@ void generate(struct token *rootToken,char *code){
 				   rootToken->type == SEMICOLON ||
 				   rootToken->type == INTEGER || 
 				   rootToken->type == FLOAT_){
-			if (afterAssignment){
+			if (afterAssignment && declaring){
 				printf("123\n");
 				int isF = 0;
 				struct token *original = rootToken;
