@@ -39,7 +39,6 @@ void lex(char *sCode,struct token *rootToken){
 					eI = stringLaH(sCode,x,sz,0,false); // ending index of string 					
 				}
 				value = malloc(sizeof(char)*(eI-x));
-				//printf("eI - x = %d\n",eI-x);
 	 			nxt_token->value = value;
 				int error = sliceString(sCode,x,eI,sz,value);
 				if (error == -1){
@@ -133,7 +132,6 @@ void lex(char *sCode,struct token *rootToken){
 				printf("Syntax error --> %c\n",sCode[x]);
 				tokenReturned = 0;
 			}
-			//printf("%p / %p\n",cToken->type,cToken->value);
 			if (tokenReturned){
 				printf("<%d> Token returned : [%d] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
 				cToken->next = nxt_token;
@@ -142,13 +140,10 @@ void lex(char *sCode,struct token *rootToken){
 			}
 		}	
 	}
-	//printf(">>> ");
 }
 
 int numberLaH(char string[],int sI,size_t sz,int *isFloat){ // number lookahead
 	// sI is starting index
-	//printf("source sI = %c\n",string[sI]);
-	//printf("Size = %zu\n",sz);
 	int eI = sI; // eI is ending index ( the index where the last number is)
 	for (int x=sI;x<sz;x++){
 		if (string[x] == '.' && isdigit(string[x+1])){
