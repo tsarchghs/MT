@@ -10,7 +10,7 @@ int main(int argc,char *argv[]){
 int type;\
 int integer;\
 float float_;\
-char string[];\
+char *string;\
 };\
 int main() {\n";
 	char END_C[] = "}";
