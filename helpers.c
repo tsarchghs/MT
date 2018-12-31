@@ -65,7 +65,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			struct token *cToken = assignmentT->next;
 			struct symbol *sToken = symbol_token;
 			struct symbol *symbolPtr = malloc(sizeof(struct symbol));
-			int found = findSymbol(symbol_token,cToken->value,symbolPtr);
+			int found = findSymbol(symbol_token,cToken->value,&symbolPtr);
 			if (found){
 				*location = *symbolPtr;
 				if (symbolPtr->dataType == INTEGER){
@@ -86,11 +86,11 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 	return -1;
 }
 
-int findSymbol(struct symbol *root_symbol,char *name,struct symbol *location){ // find symbol value
+int findSymbol(struct symbol *root_symbol,char *name,struct symbol **location){ // find symbol value
 	struct symbol *sToken = root_symbol;
 	while (sToken != NULL){
 		if (sToken->symbol_token != NULL && strcmp(sToken->symbol_token->value,name) == 0){
-			*location = *sToken;
+			*location = sToken;
 			findSymbol(root_symbol,sToken->value,location);
 			return 1;
 		}
