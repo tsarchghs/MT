@@ -263,7 +263,7 @@ void generate(struct token *rootToken,char *code){
 				} else if (dtype == 1) {
 					sprintf(repr2,repr,INTEGER,"integer");					
 				} else if (dtype == 3){
-					sprintf(repr2,repr,INTEGER,"string");					
+					sprintf(repr2,repr,STRING,"string");					
 				}
 				strcpy(code + sz,repr2);
 				sz += count(repr2);
