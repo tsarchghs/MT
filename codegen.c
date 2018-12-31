@@ -69,7 +69,6 @@ void generate(struct token *rootToken,char *code){
 					nxtSymbol->value = assignmentT->next->value;
 					cSymbol->next = nxtSymbol;
 					cSymbol = cSymbol->next;
-					//printf("cSymbol -> [%s] [%d] [%s]\n",cSymbol->symbol_token->value,cSymbol->dataType,cSymbol->value);
 					mt_object_type = decl_type;
 				}
 				char repr[] = "struct mt_object ";
@@ -92,7 +91,7 @@ void generate(struct token *rootToken,char *code){
 					} else if (rootToken->type == INTEGER){
 						dtype = 1;
 					} else if (rootToken->type == SYMBOL){
-						int found = findSymbol(&root_symbol,rootToken->value,tmpSymbol);
+						int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
 						if (found){
 							if (tmpSymbol->dataType == FLOAT_){
 								dtype = 2;
@@ -121,7 +120,7 @@ void generate(struct token *rootToken,char *code){
 					if (rootToken->type == SYMBOL){
 						strcpy(code + sz,rootToken->value);
 						sz += count(rootToken->value);
-						int found = findSymbol(&root_symbol,rootToken->value,tmpSymbol);
+						int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
 						if (found){
 							if (tmpSymbol->dataType == INTEGER){
 								strcpy(code + sz,".integer ");
@@ -190,11 +189,35 @@ void generate(struct token *rootToken,char *code){
 					sz += count(rootToken->value);
 				} else if (!declaring) {
 					struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
-					int found_symbol = findSymbol(&root_symbol,rootToken->value,tmpSymbol);
+					int found_symbol = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
 					if (found_symbol){
 						strcpy(code + sz,rootToken->value);
 						sz += count(rootToken->value);
 						code[sz] = ' ';
+
+						struct token *original = rootToken;
+						while (rootToken->next != NULL && rootToken->type != SEMICOLON){
+							if (rootToken->type == INTEGER && rootToken->type == STRING){
+								tmpSymbol->dataType = rootToken->type;
+							} else if (rootToken->type == FLOAT_) {
+								tmpSymbol->dataType = FLOAT_;
+								break;
+							} else if (rootToken->type == SYMBOL){
+								struct symbol *tmpSymbol2 = malloc(sizeof(struct symbol));
+								int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol2);
+								if (found){
+									tmpSymbol->dataType = tmpSymbol2->dataType;
+									if (tmpSymbol2->dataType == FLOAT_){
+										break;
+									}
+								} else {
+									printf("ERROR: %s is undefined\n",rootToken->value);
+								}
+							}
+							rootToken = rootToken->next;
+						}
+						rootToken = original;
+
 						if (tmpSymbol->dataType == INTEGER){
 							strcpy(code + sz,".integer ");
 							sz += 9;
@@ -251,6 +274,7 @@ void generate(struct token *rootToken,char *code){
 					rootToken = rootToken->next;
 				}
 				rootToken = original;
+
 				if (rootToken->type == ASSIGNMENT){
 					strcpy(code+sz,"=");
 					sz++;
@@ -273,7 +297,7 @@ void generate(struct token *rootToken,char *code){
 						sz += count(rootToken->value);	
 					} else if (rootToken->type == SYMBOL){
 						struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
-						int found = findSymbol(&root_symbol,rootToken->value,tmpSymbol);
+						int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
 						if (found){
 							strcpy(code+sz,rootToken->value);
 							sz += count(rootToken->value);
