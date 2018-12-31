@@ -11,8 +11,6 @@ void generate(struct token *rootToken,char *code){
 	int afterAssignment = 0;
 	int mt_object_type = 0;
 	struct symbol root_symbol = {.next=NULL,.value=NULL,.symbol_token=NULL,.dataType=0};
-	//strcpy(code,START);
-	//sz += sizeof(START) / sizeof(START[0]);
 	struct symbol *cSymbol = &root_symbol; // current symbol
 	struct symbol *symbolLoc = NULL;
 	int convert = 0; // if convert=1 when symbol token found it will write it's value instead of the variable name
@@ -119,7 +117,6 @@ void generate(struct token *rootToken,char *code){
 				}
 				strcpy(code + sz,repr2);
 				sz += count(repr2);
-				//struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
 				while (rootToken != NULL){
 					if (rootToken->type == SYMBOL){
 						strcpy(code + sz,rootToken->value);
@@ -321,6 +318,6 @@ void generate(struct token *rootToken,char *code){
 		if (rootToken != NULL){
 			rootToken = rootToken->next;
 		}
-	} while (rootToken != NULL); // make sure to add support for last token
+	} while (rootToken != NULL);
 	code[sz] = '\0';
 }
