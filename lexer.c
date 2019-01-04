@@ -39,7 +39,6 @@ void lex(char *sCode,struct token *rootToken){
 					eI = stringLaH(sCode,x,sz,0,false); // ending index of string 					
 				}
 				value = malloc(sizeof(char)*(eI-x));
-				//printf("eI - x = %d\n",eI-x);
 	 			nxt_token->value = value;
 				int error = sliceString(sCode,x,eI,sz,value);
 				if (error == -1){
@@ -99,19 +98,30 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				nxt_token->value = value;	
 				x++;			
-			} else if (sCode[x] == '=' || sCode[x] == '(' || sCode[x] == ')' || sCode[x] == '+' || 
+			} else if (sCode[x] == '=' || sCode[x] == '(' || sCode[x] == ')' || sCode[x] == '+' || sCode[x] == '*' ||
 					   sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
-				value = malloc(sizeof(char)*2);
-				value[0] = sCode[x];
-				value[1] = '\0';
-				if (sCode[x] == '='){
-					nxt_token->type = ASSIGNMENT;
-				} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
-					nxt_token->type = OPERATOR;
-				} else if (sCode[x] == '(' || sCode[x] == ')'){
-					nxt_token->type = PARENTHESIS;
+				if ((sCode[x] == '-' || sCode[x] == '+' || sCode[x] == '/' || sCode[x] == '*') && sCode[x+1] == '='){
+					value = malloc(sizeof(char)*3);
+					value[0] = sCode[x];
+					value[1] = sCode[x+1];
+					value[2] = '\0';
+					nxt_token->type = ASSIGNMENT_OPERATOR;
+					nxt_token->value = value;
+					x++;
+				} else {
+					value = malloc(sizeof(char)*2);
+					value[0] = sCode[x];
+					value[1] = '\0';
+					if (sCode[x] == '='){
+						nxt_token->type = ASSIGNMENT;
+					} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' ||
+							   sCode[x] == '<' || sCode[x] == '>' || sCode[x] == '*'){
+						nxt_token->type = OPERATOR;
+					} else if (sCode[x] == '(' || sCode[x] == ')'){
+						nxt_token->type = PARENTHESIS;
+					}
+					nxt_token->value = value;
 				}
-				nxt_token->value = value;
 			} else if (isdigit(sCode[x])) {
 				int isFloat = 0;
 				int eI = numberLaH(sCode,x,sz,&isFloat);
@@ -133,22 +143,17 @@ void lex(char *sCode,struct token *rootToken){
 				printf("Syntax error --> %c\n",sCode[x]);
 				tokenReturned = 0;
 			}
-			//printf("%p / %p\n",cToken->type,cToken->value);
 			if (tokenReturned){
-				printf("<%d> Token returned : [%d] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
 				cToken->next = nxt_token;
 				cToken = cToken->next;
 				n++;
 			}
 		}	
 	}
-	//printf(">>> ");
 }
 
 int numberLaH(char string[],int sI,size_t sz,int *isFloat){ // number lookahead
 	// sI is starting index
-	//printf("source sI = %c\n",string[sI]);
-	//printf("Size = %zu\n",sz);
 	int eI = sI; // eI is ending index ( the index where the last number is)
 	for (int x=sI;x<sz;x++){
 		if (string[x] == '.' && isdigit(string[x+1])){
@@ -185,7 +190,7 @@ int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe){
 		if (inApostrophe && string[x+1] == oApostrophe){ // 39 is ascii for signle quote
 				eI += 2;
 			break;
-		} else {
+		} else if (!inApostrophe) {
 			if (isspace(string[x]) ||
 				string[x] == '=' ||
 				string[x] == '+' ||
@@ -196,7 +201,6 @@ int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe){
 				string[x] == ':' || 
 				string[x] == ';'){
 				break;
-				//TODO
 			}
 		}
 		eI++;

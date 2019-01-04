@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "lexer.h"
 
 const int ROOT;
 const int DECLARATION ;
@@ -14,6 +15,9 @@ const int COLON;
 const int COMMENT;
 const int PARENTHESIS;
 const int FLOAT_;
+const int ASSIGNMENT_OPERATOR;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location);
 int count(char string[]);
+int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *location,int mode); // declaration type look-a-head
+int findSymbol(struct symbol *root_symbol,char *name,struct symbol **location); // find symbol value
