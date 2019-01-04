@@ -13,6 +13,11 @@ var x = 1;
 var y = 2.3 + 5 / 2;
 var z = y + x;
 
+// Typecasting
+z = "dsasd";
+z = 1;
+z = 1.5 + z;
+
 // Example of nested conditional statements
 if x >= y: // Conditional statements end with the keyword 'end'
 	if z <= x: 
