@@ -85,12 +85,16 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 				if (mode == 1){
 					return symbolPtr->dataType;
 				} else if (mode == 2){
-					if (symbolPtr->dataType == INTEGER){
-						return 1;
-					} else if (symbolPtr->dataType == STRING){
-						return 2;
-					} else if (symbolPtr->dataType == FLOAT_){
-						return 3;
+					if (mode == 1){
+						return symbolPtr->dataType;
+					} else {
+						if (symbolPtr->dataType == INTEGER){
+							return 1;
+						} else if (symbolPtr->dataType == STRING){
+							return 2;
+						} else if (symbolPtr->dataType == FLOAT_){
+							return 3;
+						}
 					}
 				}
 			} else {
@@ -104,7 +108,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 				struct token *cToken = assignmentT->next;
 				int dtype = -4;
 				struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
-				while (cToken != NULL){
+				while (cToken != NULL && cToken->type != SEMICOLON){
 					if (cToken->type == STRING || cToken->type == FLOAT_ || cToken->type == INTEGER){
 						dtype = token->type;
 						if (cToken->type == FLOAT_ || cToken->type == STRING){
