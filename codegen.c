@@ -23,7 +23,8 @@ void generate(struct token *rootToken,char *code){
 			int decl_type = dtLaH(rootToken,&root_symbol,symbolLoc);
 			if (decl_type == 4){
 				expr_to_var = 1;
-			} else if (decl_type == 1 || decl_type == 2 || decl_type == 3){
+			}
+			if (decl_type == 1 || decl_type == 2 || decl_type == 3){
 				convert = 1;
 				struct token *assignmentT = rootToken->next->next;
 				nxtSymbol->value = assignmentT->next->value;
@@ -33,10 +34,9 @@ void generate(struct token *rootToken,char *code){
 
 				struct token *original = rootToken;
 				while (rootToken->next != NULL && rootToken->type != SEMICOLON){
-					if (rootToken->type == INTEGER && rootToken->type == STRING){
+					nxtSymbol->dataType = rootToken->type;
+					if (rootToken->type == FLOAT_){
 						nxtSymbol->dataType = rootToken->type;
-					} else {
-						nxtSymbol->dataType = FLOAT_;
 						break;
 					}
 					rootToken = rootToken->next;
@@ -71,9 +71,11 @@ void generate(struct token *rootToken,char *code){
 					cSymbol = cSymbol->next;
 					mt_object_type = decl_type;
 				}
-				char repr[] = "struct mt_object ";
-				strcpy(code + sz,repr);
-				sz += count(repr);
+				if (!expr_to_var){
+					char repr[] = "struct mt_object ";
+					strcpy(code + sz,repr);
+					sz += count(repr);
+				}
 
 			}
 		} else if (rootToken->type == SYMBOL){
@@ -104,6 +106,7 @@ void generate(struct token *rootToken,char *code){
 					rootToken = rootToken->next;
 				}
 				rootToken = original;
+				//nextSymbol->dataType = dtype;
 				char repr2[500];
 				if (dtype == FLOAT_){
 					sprintf(repr2,repr,FLOAT_,"float_");
@@ -147,6 +150,7 @@ void generate(struct token *rootToken,char *code){
 				declaring = 0;
 				expr_to_var = 0;
 				afterAssignment = 0;
+				///printf("[%d] [%s]\n",nextSymbol->dataType,nextSymbol->symbol_token->value);
 			} 
 			if (declaring && afterAssignment && convert && 
 					(symbolLoc != NULL && strcmp(symbolLoc->symbol_token->value,rootToken->value)) == 0){
