@@ -150,7 +150,6 @@ void generate(struct token *rootToken,char *code){
 				declaring = 0;
 				expr_to_var = 0;
 				afterAssignment = 0;
-				///printf("[%d] [%s]\n",nextSymbol->dataType,nextSymbol->symbol_token->value);
 			} if (declaring && afterAssignment && convert && 
 					(symbolLoc != NULL && strcmp(symbolLoc->symbol_token->value,rootToken->value)) == 0){
 				if (rootToken->next->type == SEMICOLON){
@@ -199,13 +198,7 @@ void generate(struct token *rootToken,char *code){
 						struct token *original = rootToken;
 						struct symbol *locSymbol = malloc(sizeof(struct symbol));
 						int dtype = dtLaH(rootToken,&root_symbol,locSymbol,1);
-						printf("%d -> %s -----\n",dtype,tmpSymbol->value);
-						//tmpSymbol->dataType = STRING;
-						//printf("[%s] [%d]\n",tmpSymbol->symbol_token->value,tmpSymbol->dataType);
-						printf("%p - %p\n",tmpSymbol,nxtSymbol);
-						printf("[%s] -->\n",tmpSymbol->symbol_token->value);
 						if (dtype == INTEGER || dtype == 1){
-							printf("DSA1\n");
 							strcpy(code + sz,".integer ");
 							sz += 9;
 							tmpSymbol->dataType = INTEGER;
