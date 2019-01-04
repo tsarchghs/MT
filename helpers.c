@@ -17,6 +17,7 @@ const int COLON = 100;
 const int COMMENT = 110;
 const int PARENTHESIS = 120;
 const int FLOAT_ = 130;
+const int ASSIGNMENT_OPERATOR = 140;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){

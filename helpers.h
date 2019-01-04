@@ -15,6 +15,7 @@ const int COLON;
 const int COMMENT;
 const int PARENTHESIS;
 const int FLOAT_;
+const int ASSIGNMENT_OPERATOR;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location);
 int count(char string[]);
