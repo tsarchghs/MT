@@ -61,7 +61,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 	struct token *assignmentT = NULL;
 	struct token *original = token;
 	while (token != NULL){
-		if (token->type == ASSIGNMENT){
+		if (token->type == ASSIGNMENT || token->type == ASSIGNMENT_OPERATOR){
 			assignmentT = token;
 			break;
 		}
