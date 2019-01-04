@@ -3,9 +3,16 @@
 #include <string.h>
 #include "lexer.h"
 #include "helpers.h"
+#include "codegen.h"
 
 int main(int argc,char *argv[]){
-	char START_C[] = "int main() {";
+	char START_C[] = "struct mt_object {\
+int type;\
+int integer;\
+float float_;\
+char *string;\
+};\
+int main() {\n";
 	char END_C[] = "}";
 	struct token rootToken = {.type=ROOT,.value=NULL,.next=NULL};
 	char code[1000];
@@ -31,7 +38,7 @@ int main(int argc,char *argv[]){
 		if (buffer){
 			//printf("%s\n",buffer);
 			lex(buffer,&rootToken);
-			generate(&rootToken,&code);
+			generate(&rootToken,&code[0]);
 		}
 	} else {
 		char *input = malloc(sizeof(char) * 255);
@@ -53,7 +60,7 @@ int main(int argc,char *argv[]){
 			}
 			 else {
 				lex(input,&rootToken);
-				generate(&rootToken,&code);	
+				generate(&rootToken,&code[0]);	
 			}
 		}
 	}
