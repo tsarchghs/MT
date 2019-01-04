@@ -133,7 +133,6 @@ void lex(char *sCode,struct token *rootToken){
 				tokenReturned = 0;
 			}
 			if (tokenReturned){
-				printf("<%d> Token returned : [%d] [%s] [%p]\n",n,nxt_token->type,nxt_token->value,nxt_token->next);
 				cToken->next = nxt_token;
 				cToken = cToken->next;
 				n++;
@@ -180,7 +179,7 @@ int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe){
 		if (inApostrophe && string[x+1] == oApostrophe){ // 39 is ascii for signle quote
 				eI += 2;
 			break;
-		} else {
+		} else if (!inApostrophe) {
 			if (isspace(string[x]) ||
 				string[x] == '=' ||
 				string[x] == '+' ||
