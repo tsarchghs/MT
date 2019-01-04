@@ -106,7 +106,7 @@ void generate(struct token *rootToken,char *code){
 					rootToken = rootToken->next;
 				}
 				rootToken = original;
-				//nextSymbol->dataType = dtype;
+				nxtSymbol->dataType = dtype;
 				char repr2[500];
 				if (dtype == FLOAT_){
 					sprintf(repr2,repr,FLOAT_,"float_");
