@@ -13,7 +13,7 @@ var x = 1;
 var y = 2.3 + 5 / 2;
 var z = y + x;
 
-// Typecasting
+// Dynamic typing
 z = "dsasd";
 z = 1;
 z = 1.5 + z;
