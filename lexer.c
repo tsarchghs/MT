@@ -98,19 +98,29 @@ void lex(char *sCode,struct token *rootToken){
 				}
 				nxt_token->value = value;	
 				x++;			
-			} else if (sCode[x] == '=' || sCode[x] == '(' || sCode[x] == ')' || sCode[x] == '+' || 
+			} else if (sCode[x] == '=' || sCode[x] == '(' || sCode[x] == ')' || sCode[x] == '+' || sCode[x] == '*' ||
 					   sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
-				value = malloc(sizeof(char)*2);
-				value[0] = sCode[x];
-				value[1] = '\0';
-				if (sCode[x] == '='){
-					nxt_token->type = ASSIGNMENT;
-				} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
-					nxt_token->type = OPERATOR;
-				} else if (sCode[x] == '(' || sCode[x] == ')'){
-					nxt_token->type = PARENTHESIS;
+				if ((sCode[x] == '-' || sCode[x] == '+' || sCode[x] == '/' || sCode[x] == '*') && sCode[x+1] == '='){
+					value = malloc(sizeof(char)*3);
+					value[0] = sCode[x];
+					value[1] = sCode[x+1];
+					value[2] = '\0';
+					nxt_token->type = ASSIGNMENT_OPERATOR;
+					nxt_token->value = value;
+					x++;
+				} else {
+					value = malloc(sizeof(char)*2);
+					value[0] = sCode[x];
+					value[1] = '\0';
+					if (sCode[x] == '='){
+						nxt_token->type = ASSIGNMENT;
+					} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
+						nxt_token->type = OPERATOR;
+					} else if (sCode[x] == '(' || sCode[x] == ')'){
+						nxt_token->type = PARENTHESIS;
+					}
+					nxt_token->value = value;
 				}
-				nxt_token->value = value;
 			} else if (isdigit(sCode[x])) {
 				int isFloat = 0;
 				int eI = numberLaH(sCode,x,sz,&isFloat);
@@ -190,7 +200,6 @@ int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe){
 				string[x] == ':' || 
 				string[x] == ';'){
 				break;
-				//TODO
 			}
 		}
 		eI++;
