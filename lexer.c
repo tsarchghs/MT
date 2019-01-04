@@ -114,7 +114,8 @@ void lex(char *sCode,struct token *rootToken){
 					value[1] = '\0';
 					if (sCode[x] == '='){
 						nxt_token->type = ASSIGNMENT;
-					} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
+					} else if (sCode[x] == '+' || sCode[x] == '-' || sCode[x] == '/' ||
+							   sCode[x] == '<' || sCode[x] == '>' || sCode[x] == '*'){
 						nxt_token->type = OPERATOR;
 					} else if (sCode[x] == '(' || sCode[x] == ')'){
 						nxt_token->type = PARENTHESIS;
