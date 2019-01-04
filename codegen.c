@@ -20,7 +20,7 @@ void generate(struct token *rootToken,char *code){
 		if (rootToken->type == DECLARATION){
 			declaring = 1;
 			symbolLoc = malloc(sizeof(struct symbol));
-			int decl_type = dtLaH(rootToken,&root_symbol,symbolLoc);
+			int decl_type = dtLaH(rootToken,&root_symbol,symbolLoc,2);
 			if (decl_type == 4){
 				expr_to_var = 1;
 			}
@@ -86,7 +86,7 @@ void generate(struct token *rootToken,char *code){
 				struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
 				while (rootToken != NULL && rootToken->type != SEMICOLON){
 					if (rootToken->type == FLOAT_ || rootToken->type == STRING || rootToken->type == INTEGER){
-						dtype = 2;
+						dtype = rootToken->type;
 						if (rootToken->type == FLOAT_){
 							break;
 						}
@@ -115,6 +115,7 @@ void generate(struct token *rootToken,char *code){
 				} else if (dtype == STRING){
 					sprintf(repr2,repr,INTEGER,"string");
 				}
+				symbolLoc->dataType = dtype;
 				strcpy(code + sz,repr2);
 				sz += count(repr2);
 				while (rootToken != NULL){
@@ -151,8 +152,7 @@ void generate(struct token *rootToken,char *code){
 				expr_to_var = 0;
 				afterAssignment = 0;
 				///printf("[%d] [%s]\n",nextSymbol->dataType,nextSymbol->symbol_token->value);
-			} 
-			if (declaring && afterAssignment && convert && 
+			} if (declaring && afterAssignment && convert && 
 					(symbolLoc != NULL && strcmp(symbolLoc->symbol_token->value,rootToken->value)) == 0){
 				if (rootToken->next->type == SEMICOLON){
 					char repr[] = " {.type=%d,.%s=%s.%s}";
@@ -198,7 +198,9 @@ void generate(struct token *rootToken,char *code){
 						code[sz] = ' ';
 
 						struct token *original = rootToken;
-						while (rootToken->next != NULL && rootToken->type != SEMICOLON){
+						rootToken = rootToken->next;
+						/*while (rootToken->next != NULL && rootToken->type != SEMICOLON){
+							printf("[%s] [%d]\n",rootToken->value,rootToken->type);
 							if (rootToken->type == INTEGER && rootToken->type == STRING){
 								tmpSymbol->dataType = rootToken->type;
 							} else if (rootToken->type == FLOAT_) {
@@ -207,6 +209,7 @@ void generate(struct token *rootToken,char *code){
 							} else if (rootToken->type == SYMBOL){
 								struct symbol *tmpSymbol2 = malloc(sizeof(struct symbol));
 								int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol2);
+								//printf("FOUND SYMBOL : %s - %d\n",tmpSymbol2->symbol_token->value,tmpSymbol2->dataType);
 								if (found){
 									tmpSymbol->dataType = tmpSymbol2->dataType;
 									if (tmpSymbol2->dataType == FLOAT_){
@@ -215,20 +218,39 @@ void generate(struct token *rootToken,char *code){
 								} else {
 									printf("ERROR: %s is undefined\n",rootToken->value);
 								}
+								printf("[%d]\n",tmpSymbol2->dataType);
 							}
 							rootToken = rootToken->next;
-						}
+						}*/
+						struct symbol *locSymbol = malloc(sizeof(struct symbol));
+						int dtype = dtLaH(rootToken,&root_symbol,locSymbol,1);
+						printf("%d -----\n",dtype);
 						rootToken = original;
-
-						if (tmpSymbol->dataType == INTEGER){
+						//printf("[%s] [%d]\n",tmpSymbol->symbol_token->value,tmpSymbol->dataType);
+						if (dtype == INTEGER || dtype == 1){
 							strcpy(code + sz,".integer ");
 							sz += 9;
-						} else if (tmpSymbol->dataType == FLOAT_){
+							locSymbol->dataType = INTEGER;
+						} else if (dtype == FLOAT_ || dtype == 3){
 							strcpy(code + sz,".float_ ");
-							sz += 8;
-						} else if (tmpSymbol->dataType == STRING){
+							sz += 8;							
+							locSymbol->dataType = FLOAT_;
+						} else if (dtype == STRING || dtype == 2){
 							strcpy(code + sz,".string ");
 							sz += 8;
+							locSymbol->dataType = STRING;
+						} else {
+							locSymbol->dataType = tmpSymbol->dataType;
+							if (tmpSymbol->dataType == INTEGER){
+								strcpy(code + sz,".integer ");
+								sz += 9;
+							} else if (tmpSymbol->dataType == FLOAT_){
+								strcpy(code + sz,".float_ ");
+								sz += 8;							
+							} else if (tmpSymbol->dataType == STRING ){
+								strcpy(code + sz,".string ");
+								sz += 8;		
+							}
 						} 
 					} else {
 						if (rootToken->value[0] == ';'){ // ugly I know :'(
@@ -237,6 +259,7 @@ void generate(struct token *rootToken,char *code){
 						} else {
 							printf("ERROR: %s is undefined\n",rootToken->value);
 						}
+						declaring = 0;
 					}
 				} else {
 					strcpy(code + sz,rootToken->value);
@@ -286,10 +309,13 @@ void generate(struct token *rootToken,char *code){
 				char repr2[500];
 				if (dtype == 2){
 					sprintf(repr2,repr,FLOAT_,"float_");
+					symbolLoc->dataType = FLOAT_;
 				} else if (dtype == 1) {
 					sprintf(repr2,repr,INTEGER,"integer");					
+					symbolLoc->dataType = INTEGER;
 				} else if (dtype == 3){
 					sprintf(repr2,repr,STRING,"string");					
+					symbolLoc->dataType = STRING;
 				}
 				strcpy(code + sz,repr2);
 				sz += count(repr2);
