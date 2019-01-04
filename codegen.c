@@ -83,23 +83,21 @@ void generate(struct token *rootToken,char *code){
 				struct token *original = rootToken;
 				struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
 				while (rootToken != NULL && rootToken->type != SEMICOLON){
-					if (rootToken->type == FLOAT_){
+					if (rootToken->type == FLOAT_ || rootToken->type == STRING || rootToken->type == INTEGER){
 						dtype = 2;
-						break;
-					} else if (rootToken->type == STRING){
-						dtype = 3;
-					} else if (rootToken->type == INTEGER){
-						dtype = 1;
+						if (rootToken->type == FLOAT_){
+							break;
+						}
 					} else if (rootToken->type == SYMBOL){
 						int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
 						if (found){
 							if (tmpSymbol->dataType == FLOAT_){
-								dtype = 2;
+								dtype = FLOAT_;
 								break;
 							} else if (tmpSymbol->dataType == INTEGER && dtype != 2){
-								dtype = 1;
+								dtype = INTEGER;
 							} else if (tmpSymbol->dataType == STRING){
-								dtype = 3;
+								dtype = STRING;
 							}
 						}
 					}
@@ -107,11 +105,11 @@ void generate(struct token *rootToken,char *code){
 				}
 				rootToken = original;
 				char repr2[500];
-				if (dtype == 2){
+				if (dtype == FLOAT_){
 					sprintf(repr2,repr,FLOAT_,"float_");
-				} else if (dtype == 1) {
+				} else if (dtype == INTEGER) {
 					sprintf(repr2,repr,INTEGER,"integer");					
-				} else if (dtype == 3){
+				} else if (dtype == STRING){
 					sprintf(repr2,repr,INTEGER,"string");
 				}
 				strcpy(code + sz,repr2);
