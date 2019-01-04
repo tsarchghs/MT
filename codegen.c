@@ -249,6 +249,7 @@ void generate(struct token *rootToken,char *code){
 				sz += 2;
 				inConditional = 0;
 		} else if (rootToken->type == ASSIGNMENT ||
+				   rootToken->type == ASSIGNMENT_OPERATOR ||
 				   rootToken->type == OPERATOR ||
 				   rootToken->type == STRING || 
 				   rootToken->type == PARENTHESIS ||
