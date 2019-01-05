@@ -2,6 +2,7 @@
 #include "lexer.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 const int ROOT = 0;
 const int DECLARATION = 10;
@@ -18,6 +19,8 @@ const int COMMENT = 110;
 const int PARENTHESIS = 120;
 const int FLOAT_ = 130;
 const int ASSIGNMENT_OPERATOR = 140;
+const int FUNCTION = 150;
+const int COMMA = 160;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
@@ -30,6 +33,20 @@ int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	char str[eI-sI+1];
 	int i = 0;
 	for (int x=sI;x<eI;x++){
+		if (isspace(string[x]) ||
+			string[x] == '=' ||
+			string[x] == ')' ||
+			string[x] == '(' ||
+			string[x] == ',' ||
+			string[x] == '+' ||
+			string[x] == '>' ||
+			string[x] == '<' ||
+			string[x] == '-' ||
+			string[x] == '/' || 
+			string[x] == ':' || 
+			string[x] == ';'){
+			break;
+		}
 		str[i] = string[x];
 		i++;	
 	}
