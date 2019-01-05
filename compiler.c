@@ -74,6 +74,6 @@ int main() {\n";
 	}
 	fprintf(fptr,"%s %s %s",START_C,code,END_C);
 	fclose(fptr);
-	system("clang o.c");
+	system("gcc o.c");
 	//remove("o.c");
 }
