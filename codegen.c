@@ -7,7 +7,9 @@
 void generate(struct token *rootToken,char *code){
 	int sz = 0;
 	int inConditional = 0;
+	int inArgs = 0;
 	int declaring = 0;
+	int declFunc = 0;
 	int afterAssignment = 0;
 	int mt_object_type = 0;
 	struct symbol root_symbol = {.next=NULL,.value=NULL,.symbol_token=NULL,.dataType=0};
@@ -17,7 +19,15 @@ void generate(struct token *rootToken,char *code){
 	int expr_to_var = 0;
 	do {
 		struct symbol *nxtSymbol = malloc(sizeof(struct symbol));
-		if (rootToken->type == DECLARATION){
+		if (rootToken->type == FUNCTION){
+			strcpy(code + sz,"struct mt_object ");
+			sz += 17;
+			strcpy(code + sz,rootToken->next->value);
+			sz += count(rootToken->next->value);
+			rootToken = rootToken->next;
+			declFunc = 1;
+			inArgs = 1;
+		} else if (rootToken->type == DECLARATION){
 			declaring = 1;
 			symbolLoc = malloc(sizeof(struct symbol));
 			int decl_type = dtLaH(rootToken,&root_symbol,symbolLoc,2);
@@ -228,7 +238,14 @@ void generate(struct token *rootToken,char *code){
 							strcpy(code + sz,";");
 							sz++;
 						} else {
-							printf("ERROR: %s is undefined\n",rootToken->value);
+							if (inArgs){
+								strcpy(code + sz,"struct mt_object ");
+								sz += 17;
+								strcpy(code + sz,rootToken->value);
+								sz += count(rootToken->value);
+							} else {
+								printf("ERROR: %s is undefined\n",rootToken->value);
+							}
 						}
 						declaring = 0;
 					}
@@ -237,7 +254,7 @@ void generate(struct token *rootToken,char *code){
 					sz += count(rootToken->value);				
 				}
 			}
-			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && inConditional){
+			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && (inConditional || inArgs)){
 				code[sz] = ')';
 				sz++;
 				inConditional = 0;
@@ -342,6 +359,9 @@ void generate(struct token *rootToken,char *code){
 			}
 			code[sz] = ' ';
 			sz++;
+		} else if (rootToken->type == COMMA){
+			code[sz] = ',';
+			sz++;
 		} else if (rootToken->type == END){
 			code[sz] = '}';
 			sz++;
@@ -357,7 +377,11 @@ void generate(struct token *rootToken,char *code){
 				sz += count(rootToken->value);
 			}
 			if (!(strcmp(rootToken->value,"else") == 0)){
-				inConditional = 1;
+				if (declFunc){
+					inArgs = 1;
+				} else {
+					inConditional = 1;
+				}
 				code[sz] = '(';
 				sz++;
 			}
