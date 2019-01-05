@@ -21,6 +21,8 @@ const int FLOAT_ = 130;
 const int ASSIGNMENT_OPERATOR = 140;
 const int FUNCTION = 150;
 const int COMMA = 160;
+const int RETURN = 170;
+const int TYPE = 180;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
