@@ -3,13 +3,26 @@
 #include "helpers.h"
 
 // I sincirely apologise to my future self for turning this function into spaghetti code on 12/30/2018
+void generate_function(struct token *funcToken,char *code,struct param *lfparams){ // lfparams -> last function params
+	int defined = 0; // 1 when "struct mt_object <function_name> is copied to code
+	struct token *cToken = funcToken;
+	if (cToken->type == FUNCTION){
+		if (defined){
+			generate_function();
+		} else {
+			strcpy(code + sz,"struct mt_object ");
+			sz += 17;
+			strcpy(code + sz,rootToken->next->value);
+			sz += count(rootToken->next->value);
+			rootToken = rootToken->next;
+		}
+	}
+};
 
 void generate(struct token *rootToken,char *code){
 	int sz = 0;
 	int inConditional = 0;
-	int inArgs = 0;
 	int declaring = 0;
-	int declFunc = 0;
 	int afterAssignment = 0;
 	int mt_object_type = 0;
 	struct symbol root_symbol = {.next=NULL,.value=NULL,.symbol_token=NULL,.dataType=0};
@@ -20,13 +33,7 @@ void generate(struct token *rootToken,char *code){
 	do {
 		struct symbol *nxtSymbol = malloc(sizeof(struct symbol));
 		if (rootToken->type == FUNCTION){
-			strcpy(code + sz,"struct mt_object ");
-			sz += 17;
-			strcpy(code + sz,rootToken->next->value);
-			sz += count(rootToken->next->value);
-			rootToken = rootToken->next;
-			declFunc = 1;
-			inArgs = 1;
+			generate_function(rootToken,code,NULL);
 		} else if (rootToken->type == DECLARATION){
 			declaring = 1;
 			symbolLoc = malloc(sizeof(struct symbol));
@@ -52,8 +59,6 @@ void generate(struct token *rootToken,char *code){
 					rootToken = rootToken->next;
 				}
 				rootToken = original;
-
-
 				cSymbol->next = nxtSymbol;
 				cSymbol = cSymbol->next;
 			} else {
@@ -238,14 +243,7 @@ void generate(struct token *rootToken,char *code){
 							strcpy(code + sz,";");
 							sz++;
 						} else {
-							if (inArgs){
-								strcpy(code + sz,"struct mt_object ");
-								sz += 17;
-								strcpy(code + sz,rootToken->value);
-								sz += count(rootToken->value);
-							} else {
-								printf("ERROR: %s is undefined\n",rootToken->value);
-							}
+							printf("ERROR: %s is undefined\n",rootToken->value);
 						}
 						declaring = 0;
 					}
@@ -254,24 +252,17 @@ void generate(struct token *rootToken,char *code){
 					sz += count(rootToken->value);				
 				}
 			}
-			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && (inConditional || inArgs)){
+			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && inConditional){
 				code[sz] = ')';
 				sz++;
 				inConditional = 0;
-				inArgs = 0;
 			}
 			code[sz] = ' ';
 			sz++;
-		} else if (rootToken != NULL && rootToken->next != NULL && rootToken->type == COLON && (inConditional || inArgs)){
-			if (inArgs){
-				strcpy(code + sz,"{");
-				sz += 1;
-			} else {
-				strcpy(code + sz,"){");
-				sz += 2;
-			}
+		} else if (rootToken != NULL && rootToken->next != NULL && rootToken->type == COLON && inConditional){
+			strcpy(code + sz,"){");
+			sz += 2;			
 			inConditional = 0;
-			inArgs = 0;
 		} else if (rootToken->type == ASSIGNMENT ||
 				   rootToken->type == ASSIGNMENT_OPERATOR ||
 				   rootToken->type == OPERATOR ||
@@ -384,11 +375,7 @@ void generate(struct token *rootToken,char *code){
 				sz += count(rootToken->value);
 			}
 			if (!(strcmp(rootToken->value,"else") == 0)){
-				if (declFunc){
-					inArgs = 1;
-				} else {
-					inConditional = 1;
-				}
+				inConditional = 1;
 				code[sz] = '(';
 				sz++;
 			}
