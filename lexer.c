@@ -121,7 +121,7 @@ void lex(char *sCode,struct token *rootToken){
 						nxt_token->type = OPERATOR;
 					} else if (sCode[x] == '(' || sCode[x] == ')'){
 						nxt_token->type = PARENTHESIS;
-					} else if (sCode[x] == '>'){
+					} else if (sCode[x] == ','){
 						nxt_token->type = COMMA;
 					}
 					nxt_token->value = value;
