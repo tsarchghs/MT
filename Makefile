@@ -1,9 +1,8 @@
 # compiler to use
-CC = clang
+CC = gcc
 
 # flags to pass compiler
-CFLAGS = -fsanitize=signed-integer-overflow -fsanitize=undefined -ggdb3 -O0 -Qunused-arguments -std=c11 -Wall -Wextra -Wno-sign-compare -Wshadow
-
+CFLAGS = 
 # name for executable
 EXE = compiler
 
@@ -19,7 +18,6 @@ SRCS = helpers.c lexer.c codegen.c compiler.c
 
 # automatically generated list of object files
 OBJS = $(SRCS:.c=.o)
-
 
 # default target
 $(EXE): $(OBJS) $(HDRS) Makefile
