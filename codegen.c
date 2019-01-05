@@ -258,13 +258,20 @@ void generate(struct token *rootToken,char *code){
 				code[sz] = ')';
 				sz++;
 				inConditional = 0;
+				inArgs = 0;
 			}
 			code[sz] = ' ';
 			sz++;
-		} else if (rootToken != NULL && rootToken->next != NULL && rootToken->type == COLON && inConditional){
+		} else if (rootToken != NULL && rootToken->next != NULL && rootToken->type == COLON && (inConditional || inArgs)){
+			if (inArgs){
+				strcpy(code + sz,"{");
+				sz += 1;
+			} else {
 				strcpy(code + sz,"){");
 				sz += 2;
-				inConditional = 0;
+			}
+			inConditional = 0;
+			inArgs = 0;
 		} else if (rootToken->type == ASSIGNMENT ||
 				   rootToken->type == ASSIGNMENT_OPERATOR ||
 				   rootToken->type == OPERATOR ||
