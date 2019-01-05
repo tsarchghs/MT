@@ -65,6 +65,11 @@ void lex(char *sCode,struct token *rootToken){
 				} else if (strcmp(value,"function") == 0){
 					nxt_token->type = FUNCTION;
 					nxt_token->value = value;
+				} else if (strcmp(value,"int") == 0 ||
+						   strcmp(value,"float") == 0 || 
+						   strcmp(value,"string") == 0){
+					nxt_token->type = TYPE;
+					nxt_token->value = value;
 				} else {
 					nxt_token->type = SYMBOL;
 				}
