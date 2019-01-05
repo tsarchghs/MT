@@ -3,18 +3,18 @@
 #include "helpers.h"
 
 // I sincirely apologise to my future self for turning this function into spaghetti code on 12/30/2018
-void generate_function(struct token *funcToken,char *code,struct param *lfparams){ // lfparams -> last function params
+void generate_function(struct token *funcToken,char *code,int *sz,struct param *lfparams){ // lfparams -> last function params
 	int defined = 0; // 1 when "struct mt_object <function_name> is copied to code
 	struct token *cToken = funcToken;
 	if (cToken->type == FUNCTION){
 		if (defined){
-			generate_function();
+			generate_function(cToken,code,sz,lfparams);
 		} else {
-			strcpy(code + sz,"struct mt_object ");
-			sz += 17;
-			strcpy(code + sz,rootToken->next->value);
-			sz += count(rootToken->next->value);
-			rootToken = rootToken->next;
+			strcpy(code + *sz,"struct mt_object ");
+			*sz += 17;
+			strcpy(code + *sz,cToken->next->value);
+			*sz += count(cToken->next->value);
+			cToken = cToken->next;
 		}
 	}
 };
@@ -33,7 +33,7 @@ void generate(struct token *rootToken,char *code){
 	do {
 		struct symbol *nxtSymbol = malloc(sizeof(struct symbol));
 		if (rootToken->type == FUNCTION){
-			generate_function(rootToken,code,NULL);
+			generate_function(rootToken,code,&sz,NULL);
 		} else if (rootToken->type == DECLARATION){
 			declaring = 1;
 			symbolLoc = malloc(sizeof(struct symbol));
