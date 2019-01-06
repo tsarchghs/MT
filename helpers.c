@@ -87,6 +87,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			 2 - when variable is assigned to another variable and that variable has a type of string
 			 3 - when variable is assigned to another variable and that variable has a type of float
 			 4 - when after the assignment operator there is more than 1 token -> ex var a = b + 1;
+			 5 - when after the assignment operator is a function call followed by a SEMICOLON
 			-1 - when dLookahead can't predict declaration type ( syntax error )
 			-2 - when dtLaH can't predict where assignment token is
 			-3 - when variable assigned to a variable that is not declared
@@ -108,7 +109,8 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			assignmentT->next->type == STRING){
 			
 			return assignmentT->next->type;
-
+		} else if (assignmentT->next->type == FUNCTION_CALL && assignmentT->next->next->type == SEMICOLON){
+			return 5;
 		} else if (assignmentT->next->type == SYMBOL && assignmentT->next->next->type == SEMICOLON){
 			struct token *cToken = assignmentT->next;
 			struct symbol *sToken = symbol_token;
