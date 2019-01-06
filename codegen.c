@@ -341,6 +341,18 @@ int generate(struct token *rootToken,char *code){
 			code[sz] = '}';
 			sz++;
 			declFunc = 0;
+		} else if (rootToken->type == RETURN){
+			strcpy(code+sz,"return "); 
+			sz += 7;
+			rootToken = rootToken->next;
+			while (rootToken != NULL){
+				strcpy(code+sz,rootToken->value); 
+				sz += count(rootToken->value);
+				if (rootToken->type == SEMICOLON){
+					break;
+				}
+				rootToken = rootToken->next;
+			}
 		} else if (rootToken->type == COLON){
 			code[sz] = '{';
 			sz++;
