@@ -25,6 +25,19 @@ const int RETURN = 170;
 const int TYPE = 180;
 const int PARAMETER = 190;
 
+void writeType(char **code,int *sz,int type){
+	if (type == INTEGER){
+		strcpy(*code + *sz,".integer ");
+		*sz += 9;
+	} else if (type == FLOAT_){
+		strcpy(*code + *sz,".float_ ");
+		*sz += 8;							
+	} else if (type == STRING){
+		strcpy(*code + *sz,".string ");
+		*sz += 8;		
+	}
+}
+
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
 		printf("Warning: Ending index (eI=%d) bigger than size of char array\n",eI);
