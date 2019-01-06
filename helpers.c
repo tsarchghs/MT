@@ -175,7 +175,7 @@ int findPSymbol(struct param *root_param,char *name,struct param **location){ //
 		if(!(sParam->type == ROOT)){
 			if (sParam->token != NULL && strcmp(sParam->token->value,name) == 0){
 				*location = sParam;
-				findPSymbol(root_param,sParam->token->value,location);
+				//findPSymbol(root_param,sParam->token->value,location);
 				return 1;
 			}
 		}
