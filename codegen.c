@@ -345,13 +345,12 @@ int generate(struct token *rootToken,char *code){
 			strcpy(code+sz,"return "); 
 			sz += 7;
 			rootToken = rootToken->next;
-			while (rootToken != NULL){
+			if (rootToken->next != NULL && rootToken->next->type == SYMBOL){
 				strcpy(code+sz,rootToken->value); 
 				sz += count(rootToken->value);
-				if (rootToken->type == SEMICOLON){
-					break;
-				}
-				rootToken = rootToken->next;
+			} else {
+				printf("Type of return not supported\n");
+				return 1;
 			}
 		} else if (rootToken->type == COLON){
 			code[sz] = '{';
