@@ -45,8 +45,11 @@ void lex(char *sCode,struct token *rootToken){
 					printf("Error: Invalid variable name\n");
 					break;
 				}
- 				if (strcmp(value,"function") == 0 || sCode[eI] == '('){
+ 				if (sCode[eI] == '('){
 					nxt_token->type = FUNCTION_CALL;
+					nxt_token->value = value;
+				} else if (strcmp(value,"function") == 0){
+					nxt_token->type = FUNCTION;
 					nxt_token->value = value;
 				} else if (
 						strcmp(value,"if") == 0 || 
