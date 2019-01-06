@@ -38,6 +38,24 @@ void writeType(char **code,int *sz,int type){
 	}
 }
 
+void handle_conditionals(char **code,int *sz,char *value,int *declFunc,int *inConditional,int *inFuncParams){
+	if (strcmp(value,"elif") == 0){
+		strcpy(*code + *sz,"else if");
+		*sz += 7;
+	} else {
+		strcpy(*code + *sz,value);
+		*sz += count(value);
+	}
+	if (!(strcmp(value,"else") == 0)){
+		*inConditional = 1;
+		if (*declFunc){
+			*inFuncParams = 1;
+		}
+		strcpy(*code + *sz,"(");
+		*(sz) += 1;
+	}
+}
+
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
 		printf("Warning: Ending index (eI=%d) bigger than size of char array\n",eI);
