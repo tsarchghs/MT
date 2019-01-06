@@ -2,7 +2,7 @@
 #include "codegen.h"
 #include "helpers.h"
 #include <stdio.h>
-
+#include "builtin_functions.h"
 // I sincirely apologise to my future self for turning this function into spaghetti code on 12/30/2018
 
 int generate(struct token *rootToken,char *code){
@@ -338,13 +338,20 @@ int generate(struct token *rootToken,char *code){
 			code[sz] = ',';
 			sz++;
 		} else if (rootToken->type == FUNCTION_CALL){
-			while (rootToken != NULL){	
-				strcpy(code+sz,rootToken->value);		
-				sz += count(rootToken->value);
-				if (rootToken->type == SEMICOLON){
-					break;
+			if (strcmp(rootToken->value,"print")==0){
+				int error = handle_print(&code,&sz,&rootToken,&root_symbol);
+				if (error){
+					return error;
 				}
-				rootToken = rootToken->next;		
+			} else {
+				while (rootToken != NULL){	
+					strcpy(code+sz,rootToken->value);		
+					sz += count(rootToken->value);
+					if (rootToken->type == SEMICOLON){
+						break;
+					}
+					rootToken = rootToken->next;		
+				}
 			}
 		} else if (rootToken->type == END){
 			code[sz] = '}';

@@ -7,14 +7,14 @@ CFLAGS = -g
 EXE = compiler
 
 # space-separated list of header files
-HDRS = helpers.h lexer.h codegen.h
+HDRS = helpers.h lexer.h builtin_functions.h codegen.h
 
 # space-separated list of libraries, if any,
 # each of which should be prefixed with -l
 LIBS =
 
 # space-separated list of source files
-SRCS = helpers.c lexer.c codegen.c compiler.c
+SRCS = helpers.c lexer.c builtin_functions.c codegen.c compiler.c
 
 # automatically generated list of object files
 OBJS = $(SRCS:.c=.o)

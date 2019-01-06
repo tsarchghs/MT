@@ -6,6 +6,7 @@
 #include "codegen.h"
 
 int main(int argc,char *argv[]){
+	char DEPEDENCIES[] = "#include <stdio.h>\n";
 	char START_C[] = "struct mt_object {\
 int type;\
 int integer;\
@@ -76,8 +77,7 @@ int main() {\n";
 	  printf("Error!");   
 	  exit(1);             
 	}
-	fprintf(fptr,"%s %s %s",START_C,code,END_C);
+	fprintf(fptr,"%s %s %s %s",DEPEDENCIES,START_C,code,END_C);
 	fclose(fptr);
 	system("gcc o.c");
-	//remove("o.c");
 }
