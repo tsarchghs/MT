@@ -1,23 +1,9 @@
 #include <string.h>
 #include "codegen.h"
 #include "helpers.h"
+#include <stdio.h>
 
 // I sincirely apologise to my future self for turning this function into spaghetti code on 12/30/2018
-void generate_function(struct token *funcToken,char *code,int *sz,struct param *lfparams){ // lfparams -> last function params
-	int defined = 0; // 1 when "struct mt_object <function_name> is copied to code
-	struct token *cToken = funcToken;
-	if (cToken->type == FUNCTION){
-		if (defined){
-			generate_function(cToken,code,sz,lfparams);
-		} else {
-			strcpy(code + *sz,"struct mt_object ");
-			*sz += 17;
-			strcpy(code + *sz,cToken->next->value);
-			*sz += count(cToken->next->value);
-			cToken = cToken->next;
-		}
-	}
-};
 
 void generate(struct token *rootToken,char *code){
 	int sz = 0;
@@ -25,6 +11,8 @@ void generate(struct token *rootToken,char *code){
 	int declaring = 0;
 	int afterAssignment = 0;
 	int mt_object_type = 0;
+	int declFunc = 0;
+	int inFuncParams = 0;
 	struct symbol root_symbol = {.next=NULL,.value=NULL,.symbol_token=NULL,.dataType=0};
 	struct symbol *cSymbol = &root_symbol; // current symbol
 	struct symbol *symbolLoc = NULL;
@@ -33,7 +21,12 @@ void generate(struct token *rootToken,char *code){
 	do {
 		struct symbol *nxtSymbol = malloc(sizeof(struct symbol));
 		if (rootToken->type == FUNCTION){
-			generate_function(rootToken,code,&sz,NULL);
+			strcpy(code + sz,"struct mt_object ");
+			sz += 17;
+			strcpy(code + sz,rootToken->next->value);
+			sz += count(rootToken->next->value);
+			rootToken = rootToken->next;
+			declFunc = 1;
 		} else if (rootToken->type == DECLARATION){
 			declaring = 1;
 			symbolLoc = malloc(sizeof(struct symbol));
@@ -94,7 +87,10 @@ void generate(struct token *rootToken,char *code){
 
 			}
 		} else if (rootToken->type == SYMBOL){
-			if (declaring && afterAssignment && expr_to_var){
+			if (inFuncParams){
+				strcpy(code + sz,rootToken->value);
+				sz += count(rootToken->value);
+			} else if (declaring && afterAssignment && expr_to_var){
 				char repr[] = " {.type=%d,.%s=";
 				int dtype = 0; // datatype -> 1 integer 2 float 3 string
 				struct token *original = rootToken;
@@ -252,10 +248,11 @@ void generate(struct token *rootToken,char *code){
 					sz += count(rootToken->value);				
 				}
 			}
-			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && inConditional){
+			if (rootToken != NULL && rootToken->next != NULL && rootToken->next->type == COLON && (inConditional || inFuncParams)){
 				code[sz] = ')';
 				sz++;
 				inConditional = 0;
+				inFuncParams = 0;
 			}
 			code[sz] = ' ';
 			sz++;
@@ -363,6 +360,7 @@ void generate(struct token *rootToken,char *code){
 		} else if (rootToken->type == END){
 			code[sz] = '}';
 			sz++;
+			declFunc = 0;
 		} else if (rootToken->type == COLON){
 			code[sz] = '{';
 			sz++;
@@ -376,6 +374,9 @@ void generate(struct token *rootToken,char *code){
 			}
 			if (!(strcmp(rootToken->value,"else") == 0)){
 				inConditional = 1;
+				if (declFunc){
+					inFuncParams = 1;
+				}
 				code[sz] = '(';
 				sz++;
 			}
