@@ -80,5 +80,4 @@ int main() {\n";
 	fprintf(fptr,"%s %s %s %s",DEPEDENCIES,START_C,code,END_C);
 	fclose(fptr);
 	system("gcc o.c");
-	//remove("o.c");
 }
