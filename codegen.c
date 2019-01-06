@@ -214,29 +214,14 @@ int generate(struct token *rootToken,char *code){
 						struct symbol *locSymbol = malloc(sizeof(struct symbol));
 						int dtype = dtLaH(rootToken,&root_symbol,locSymbol,1);
 						if (dtype == INTEGER || dtype == 1){
-							strcpy(code + sz,".integer ");
-							sz += 9;
-							tmpSymbol->dataType = INTEGER;
+							writeType(&code,&sz,INTEGER);
 						} else if (dtype == FLOAT_ || dtype == 3){
-							strcpy(code + sz,".float_ ");
-							sz += 8;							
-							tmpSymbol->dataType = FLOAT_;
+							writeType(&code,&sz,FLOAT_);
 						} else if (dtype == STRING || dtype == 2){
-							strcpy(code + sz,".string ");
-							sz += 8;
-							tmpSymbol->dataType = STRING;
+							writeType(&code,&sz,STRING);
 						} else {
 							tmpSymbol->dataType = tmpSymbol->dataType;
-							if (tmpSymbol->dataType == INTEGER){
-								strcpy(code + sz,".integer ");
-								sz += 9;
-							} else if (tmpSymbol->dataType == FLOAT_){
-								strcpy(code + sz,".float_ ");
-								sz += 8;							
-							} else if (tmpSymbol->dataType == STRING ){
-								strcpy(code + sz,".string ");
-								sz += 8;		
-							}
+							writeType(&code,&sz,tmpSymbol->dataType);
 						} 
 					} else {
 						if (rootToken->value[0] == ';'){ // ugly I know :'(
@@ -314,16 +299,7 @@ int generate(struct token *rootToken,char *code){
 						if (found){
 							strcpy(code+sz,rootToken->value);
 							sz += count(rootToken->value);
-							if (tmpSymbol->dataType == INTEGER){
-								strcpy(code + sz,".integer ");
-								sz += 9;
-							} else if (tmpSymbol->dataType == FLOAT_){
-								strcpy(code + sz,".float_ ");
-								sz += 8;
-							} else if (tmpSymbol->dataType == STRING){
-								strcpy(code + sz,".string ");
-								sz += 8;
-							} 
+							writeType(&code,&sz,tmpSymbol->dataType);
 						} else {
 							printf("%s is not defined\n",rootToken->value);
 						}
