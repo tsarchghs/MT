@@ -70,6 +70,9 @@ void lex(char *sCode,struct token *rootToken){
 						   strcmp(value,"string") == 0){
 					nxt_token->type = TYPE;
 					nxt_token->value = value;
+				} else if (strcmp(value,"return") == 0){
+					nxt_token->type = RETURN;
+					nxt_token->value = value;
 				} else {
 					nxt_token->type = SYMBOL;
 				}
