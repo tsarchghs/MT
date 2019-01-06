@@ -2,6 +2,7 @@
 #include "lexer.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 const int ROOT = 0;
 const int DECLARATION = 10;
@@ -18,6 +19,25 @@ const int COMMENT = 110;
 const int PARENTHESIS = 120;
 const int FLOAT_ = 130;
 const int ASSIGNMENT_OPERATOR = 140;
+const int FUNCTION = 150;
+const int COMMA = 160;
+const int RETURN = 170;
+const int TYPE = 180;
+const int PARAMETER = 190;
+const int FUNCTION_CALL = 200;
+
+void writeType(char **code,int *sz,int type){
+	if (type == INTEGER){
+		strcpy(*code + *sz,".integer ");
+		*sz += 9;
+	} else if (type == FLOAT_){
+		strcpy(*code + *sz,".float_ ");
+		*sz += 8;							
+	} else if (type == STRING){
+		strcpy(*code + *sz,".string ");
+		*sz += 8;		
+	}
+}
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
@@ -30,6 +50,20 @@ int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	char str[eI-sI+1];
 	int i = 0;
 	for (int x=sI;x<eI;x++){
+		if (isspace(string[x]) ||
+			string[x] == '=' ||
+			string[x] == ')' ||
+			string[x] == '(' ||
+			string[x] == ',' ||
+			string[x] == '+' ||
+			string[x] == '>' ||
+			string[x] == '<' ||
+			string[x] == '-' ||
+			string[x] == '/' || 
+			string[x] == ':' || 
+			string[x] == ';'){
+			break;
+		}
 		str[i] = string[x];
 		i++;	
 	}
@@ -53,6 +87,7 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			 2 - when variable is assigned to another variable and that variable has a type of string
 			 3 - when variable is assigned to another variable and that variable has a type of float
 			 4 - when after the assignment operator there is more than 1 token -> ex var a = b + 1;
+			 5 - when after the assignment operator is a function call followed by a SEMICOLON
 			-1 - when dLookahead can't predict declaration type ( syntax error )
 			-2 - when dtLaH can't predict where assignment token is
 			-3 - when variable assigned to a variable that is not declared
@@ -74,7 +109,8 @@ int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *locatio
 			assignmentT->next->type == STRING){
 			
 			return assignmentT->next->type;
-
+		} else if (assignmentT->next->type == FUNCTION_CALL && assignmentT->next->next->type == SEMICOLON){
+			return 5;
 		} else if (assignmentT->next->type == SYMBOL && assignmentT->next->next->type == SEMICOLON){
 			struct token *cToken = assignmentT->next;
 			struct symbol *sToken = symbol_token;
@@ -146,6 +182,25 @@ int findSymbol(struct symbol *root_symbol,char *name,struct symbol **location){ 
 		}
 		sToken = sToken->next;
 	}
+	return 0;	
+}
+
+int findPSymbol(struct param *root_param,char *name,struct param **location){ // find parameter symbol value
+	struct param *sParam = root_param;
+	while (sParam != NULL && (sParam->token != NULL || sParam->type == ROOT)){
+		if(!(sParam->type == ROOT)){
+			if (sParam->token != NULL && strcmp(sParam->token->value,name) == 0){
+				*location = sParam;
+				//findPSymbol(root_param,sParam->token->value,location);
+				return 1;
+			}
+		}
+		sParam = sParam->next;
+		if (sParam == NULL){
+			break;
+		}
+	}
+	printf("DSA\n");
 	return 0;	
 }
 

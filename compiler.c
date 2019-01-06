@@ -38,7 +38,11 @@ int main() {\n";
 		if (buffer){
 			//printf("%s\n",buffer);
 			lex(buffer,&rootToken);
-			generate(&rootToken,&code[0]);
+			int errors = generate(&rootToken,&code[0]);
+			if (errors){
+				printf("Fix the errors\n");
+				return 1;
+			}
 		}
 	} else {
 		char *input = malloc(sizeof(char) * 255);
@@ -74,6 +78,6 @@ int main() {\n";
 	}
 	fprintf(fptr,"%s %s %s",START_C,code,END_C);
 	fclose(fptr);
-	system("clang o.c");
+	system("gcc o.c");
 	//remove("o.c");
 }

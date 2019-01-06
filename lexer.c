@@ -45,7 +45,13 @@ void lex(char *sCode,struct token *rootToken){
 					printf("Error: Invalid variable name\n");
 					break;
 				}
-				if (
+ 				if (sCode[eI] == '('){
+					nxt_token->type = FUNCTION_CALL;
+					nxt_token->value = value;
+				} else if (strcmp(value,"function") == 0){
+					nxt_token->type = FUNCTION;
+					nxt_token->value = value;
+				} else if (
 						strcmp(value,"if") == 0 || 
 						strcmp(value,"elif") == 0 ||
 						strcmp(value,"else") == 0
@@ -62,8 +68,15 @@ void lex(char *sCode,struct token *rootToken){
 					nxt_token->type = OPERATOR;
 				} else if (strcmp(value,"var") == 0){
 					nxt_token->type = DECLARATION;
-				}
-				 else {
+				} else if (strcmp(value,"int") == 0 ||
+						   strcmp(value,"float") == 0 || 
+						   strcmp(value,"string") == 0){
+					nxt_token->type = TYPE;
+					nxt_token->value = value;
+				} else if (strcmp(value,"return") == 0){
+					nxt_token->type = RETURN;
+					nxt_token->value = value;
+				} else {
 					nxt_token->type = SYMBOL;
 				}
 				x = eI - 1; // idk why it doesn't work without -1 :'(
@@ -99,7 +112,7 @@ void lex(char *sCode,struct token *rootToken){
 				nxt_token->value = value;	
 				x++;			
 			} else if (sCode[x] == '=' || sCode[x] == '(' || sCode[x] == ')' || sCode[x] == '+' || sCode[x] == '*' ||
-					   sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>'){
+					   sCode[x] == '-' || sCode[x] == '/' || sCode[x] == '<' || sCode[x] == '>' || sCode[x] == ','){
 				if ((sCode[x] == '-' || sCode[x] == '+' || sCode[x] == '/' || sCode[x] == '*') && sCode[x+1] == '='){
 					value = malloc(sizeof(char)*3);
 					value[0] = sCode[x];
@@ -119,6 +132,8 @@ void lex(char *sCode,struct token *rootToken){
 						nxt_token->type = OPERATOR;
 					} else if (sCode[x] == '(' || sCode[x] == ')'){
 						nxt_token->type = PARENTHESIS;
+					} else if (sCode[x] == ','){
+						nxt_token->type = COMMA;
 					}
 					nxt_token->value = value;
 				}
@@ -193,6 +208,9 @@ int stringLaH(char string[],int sI,size_t sz,int type,bool inApostrophe){
 		} else if (!inApostrophe) {
 			if (isspace(string[x]) ||
 				string[x] == '=' ||
+				string[x] == ')' ||
+				string[x] == '(' ||
+				string[x] == ',' ||
 				string[x] == '+' ||
 				string[x] == '>' ||
 				string[x] == '<' ||
