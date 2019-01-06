@@ -337,6 +337,15 @@ int generate(struct token *rootToken,char *code){
 		} else if (rootToken->type == COMMA){
 			code[sz] = ',';
 			sz++;
+		} else if (rootToken->type == FUNCTION_CALL){
+			while (rootToken != NULL){	
+				strcpy(code+sz,rootToken->value);		
+				sz += count(rootToken->value);
+				if (rootToken->type == SEMICOLON){
+					break;
+				}
+				rootToken = rootToken->next;		
+			}
 		} else if (rootToken->type == END){
 			code[sz] = '}';
 			sz++;
