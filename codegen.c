@@ -100,6 +100,9 @@ int generate(struct token *rootToken,char *code){
 					printf("%s not found\n",rootToken->value);
 					return 10;
 				}
+				strcpy(code + sz,rootToken->value);
+				sz += count(rootToken->value);
+				writeType(&code,&sz,param_tmp->type);
 			} else if (declaring && afterAssignment && expr_to_var){
 				char repr[] = " {.type=%d,.%s=";
 				int dtype = 0; // datatype -> 1 integer 2 float 3 string
@@ -144,16 +147,7 @@ int generate(struct token *rootToken,char *code){
 						sz += count(rootToken->value);
 						int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
 						if (found){
-							if (tmpSymbol->dataType == INTEGER){
-								strcpy(code + sz,".integer ");
-								sz += 9;
-							} else if (tmpSymbol->dataType == FLOAT_){
-								strcpy(code + sz,".float_ ");
-								sz += 8;							
-							} else if (tmpSymbol->dataType == STRING){
-								strcpy(code + sz,".string ");
-								sz += 8;		
-							}
+							writeType(&code,&sz,tmpSymbol->dataType);
 						} else {
 							printf("Var not found!\n");
 						}
@@ -390,7 +384,10 @@ int generate(struct token *rootToken,char *code){
 			}
 			if (declFunc && rootToken->next->type == SYMBOL){
 				struct param *param_ptr = malloc(sizeof(struct param));
-				param_ptr->type = PARAMETER;
+				if (strcmp(rootToken->value,"int")==0){param_ptr->type=INTEGER;};
+				if (strcmp(rootToken->value,"float")==0){param_ptr->type=FLOAT_;};
+				if (strcmp(rootToken->value,"string")==0){param_ptr->type=STRING;};
+					
 				param_ptr->token = rootToken->next;
 				param_ptr->next = malloc(sizeof(struct param));
 				param_ptr->symbol_ptr = malloc(sizeof(struct symbol));
