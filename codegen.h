@@ -10,4 +10,5 @@ struct param {
 };
 
 int generate(struct token *rootToken,char *code);
+void handle_conditionals(char **code,int *sz,char *value,int *declFunc,int *inConditional,int *inFuncParams);
 #endif

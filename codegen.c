@@ -389,3 +389,21 @@ int generate(struct token *rootToken,char *code){
 	code[sz] = '\0';
 	return 0;
 }
+
+void handle_conditionals(char **code,int *sz,char *value,int *declFunc,int *inConditional,int *inFuncParams){
+	if (strcmp(value,"elif") == 0){
+		strcpy(*code + *sz,"else if");
+		*sz += 7;
+	} else {
+		strcpy(*code + *sz,value);
+		*sz += count(value);
+	}
+	if (!(strcmp(value,"else") == 0)){
+		*inConditional = 1;
+		if (*declFunc){
+			*inFuncParams = 1;
+		}
+		strcpy(*code + *sz,"(");
+		*(sz) += 1;
+	}
+}
