@@ -24,6 +24,7 @@ const int COMMA = 160;
 const int RETURN = 170;
 const int TYPE = 180;
 const int PARAMETER = 190;
+const int FUNCTION_CALL = 200;
 
 void writeType(char **code,int *sz,int type){
 	if (type == INTEGER){
