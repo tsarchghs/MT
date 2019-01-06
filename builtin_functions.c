@@ -10,28 +10,28 @@ int handle_print(char **code,int *sz,struct token **cToken,struct symbol *root_s
 	*cToken = (*cToken)->next->next;
 	int type = (*cToken)->type;
 	if (type == INTEGER){
-		strcpy(*code+*sz,"%d\"");
-		*sz += count("%d'");
+		strcpy(*code+*sz,"%d\\n\"");
+		*sz += count("%d\\n\"");
 	} else if (type == FLOAT_){
-		strcpy(*code+*sz,"%f\"");
-		*sz += count("%f'");
+		strcpy(*code+*sz,"%f\\n\"");
+		*sz += count("%f\\n\"");
 	} else if (type == STRING){
-		strcpy(*code+*sz,"%s\"");
-		*sz += count("%s'");
+		strcpy(*code+*sz,"%s\\n\"");
+		*sz += count("%s\\n\"");
 	} else if (type == SYMBOL){
 		struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
 		int found = findSymbol(root_symbol,(*cToken)->value,&tmpSymbol);
 		if (found){
 			type = tmpSymbol->dataType;
 			if (type == INTEGER){
-				strcpy(*code+*sz,"%d\"");
-				*sz += count("%d'");
+				strcpy(*code+*sz,"%d\\n\"");
+				*sz += count("%d\\n'");
 			} else if (type == FLOAT_){
-				strcpy(*code+*sz,"%f\"");
-				*sz += count("%f'");
+				strcpy(*code+*sz,"%f\\n\"");
+				*sz += count("%d\\n'");
 			} else if (type == STRING){
-				strcpy(*code+*sz,"%s\"");
-				*sz += count("%s'");
+				strcpy(*code+*sz,"%s\\n\"");
+				*sz += count("%d\\n'");
 			} else {
 				printf("Unknown type\n");
 				return 1;
