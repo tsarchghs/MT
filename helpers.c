@@ -169,6 +169,25 @@ int findSymbol(struct symbol *root_symbol,char *name,struct symbol **location){ 
 	return 0;	
 }
 
+int findPSymbol(struct param *root_param,char *name,struct param **location){ // find parameter symbol value
+	struct param *sParam = root_param;
+	while (sParam != NULL && (sParam->token != NULL || sParam->type == ROOT)){
+		if(!(sParam->type == ROOT)){
+			if (sParam->token != NULL && strcmp(sParam->token->value,name) == 0){
+				*location = sParam;
+				findPSymbol(root_param,sParam->token->value,location);
+				return 1;
+			}
+		}
+		sParam = sParam->next;
+		if (sParam == NULL){
+			break;
+		}
+	}
+	printf("DSA\n");
+	return 0;	
+}
+
 int count(char string[]){
 	int i = 0;
 	while (1){
