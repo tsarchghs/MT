@@ -9,5 +9,5 @@ struct param {
 	struct param *next;
 };
 
-void generate(struct token *rootToken,char *code);
+int generate(struct token *rootToken,char *code);
 #endif
