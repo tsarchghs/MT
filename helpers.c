@@ -23,6 +23,7 @@ const int FUNCTION = 150;
 const int COMMA = 160;
 const int RETURN = 170;
 const int TYPE = 180;
+const int PARAMETER = 190;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	if (sz < eI){
