@@ -345,7 +345,7 @@ int generate(struct token *rootToken,char *code){
 			strcpy(code+sz,"return "); 
 			sz += 7;
 			rootToken = rootToken->next;
-			if (rootToken->next != NULL && rootToken->next->type == SYMBOL){
+			if (rootToken->next != NULL && rootToken->type == SYMBOL && rootToken->next->type == SEMICOLON){
 				strcpy(code+sz,rootToken->value); 
 				sz += count(rootToken->value);
 			} else {
