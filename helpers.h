@@ -27,3 +27,4 @@ int count(char string[]);
 int dtLaH(struct token *token,struct symbol *symbol_token,struct symbol *location,int mode); // declaration type look-a-head
 int findSymbol(struct symbol *root_symbol,char *name,struct symbol **location); // find symbol value
 int findPSymbol(struct param *root_param,char *name,struct param **location); // find parameter symbol value
+void writeType(char **code,int *sz,int type);
