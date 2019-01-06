@@ -380,21 +380,7 @@ int generate(struct token *rootToken,char *code){
 				rootToken = rootToken->next;
 			}
 		}  else if (rootToken->type == CONDITIONAL){
-			if (strcmp(rootToken->value,"elif") == 0){
-				strcpy(code + sz,"else if");
-				sz += 7;
-			} else {
-				strcpy(code + sz,rootToken->value);
-				sz += count(rootToken->value);
-			}
-			if (!(strcmp(rootToken->value,"else") == 0)){
-				inConditional = 1;
-				if (declFunc){
-					inFuncParams = 1;
-				}
-				code[sz] = '(';
-				sz++;
-			}
+			handle_conditionals(&code,&sz,rootToken->value,&declFunc,&inConditional,&inFuncParams);
 		}
 		if (rootToken != NULL){
 			rootToken = rootToken->next;
