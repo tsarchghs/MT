@@ -5,7 +5,7 @@
 
 // I sincirely apologise to my future self for turning this function into spaghetti code on 12/30/2018
 
-void generate(struct token *rootToken,char *code){
+int generate(struct token *rootToken,char *code){
 	int sz = 0;
 	int inConditional = 0;
 	int declaring = 0;
@@ -18,6 +18,10 @@ void generate(struct token *rootToken,char *code){
 	struct symbol *symbolLoc = NULL;
 	int convert = 0; // if convert=1 when symbol token found it will write it's value instead of the variable name
 	int expr_to_var = 0;
+	struct param *rootFuncParam = malloc(sizeof(struct param));
+	rootFuncParam->type = ROOT;
+	struct param *cFuncParams = malloc(sizeof(struct param));
+	rootFuncParam->next = cFuncParams;
 	do {
 		struct symbol *nxtSymbol = malloc(sizeof(struct symbol));
 		if (rootToken->type == FUNCTION){
@@ -87,9 +91,15 @@ void generate(struct token *rootToken,char *code){
 
 			}
 		} else if (rootToken->type == SYMBOL){
-			if (inFuncParams){
-				strcpy(code + sz,rootToken->value);
-				sz += count(rootToken->value);
+			if (declFunc){
+				struct param *param_tmp =  malloc(sizeof(struct param));
+				int foundParam = findPSymbol(rootFuncParam,rootToken->value,&param_tmp);
+				if (foundParam == 1){
+					printf("FOUND!\n");
+				} else {
+					printf("%s not found\n",rootToken->value);
+					return 10;
+				}
 			} else if (declaring && afterAssignment && expr_to_var){
 				char repr[] = " {.type=%d,.%s=";
 				int dtype = 0; // datatype -> 1 integer 2 float 3 string
@@ -364,7 +374,39 @@ void generate(struct token *rootToken,char *code){
 		} else if (rootToken->type == COLON){
 			code[sz] = '{';
 			sz++;
-		} else if (rootToken->type == CONDITIONAL){
+		} else if (rootToken->type == TYPE){
+			if (0){ // TODO call func
+				struct symbol *tmpSymbol = malloc(sizeof(tmpSymbol));
+				int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
+				if (found){
+					if (!
+						(strcmp(rootToken->value,"int")==0 && tmpSymbol->dataType == INTEGER) ||
+						(strcmp(rootToken->value,"float")==0 && tmpSymbol->dataType == FLOAT_) ||
+						(strcmp(rootToken->value,"string")==0 && tmpSymbol->dataType == STRING)
+						){
+							printf("Parameter type error");
+					}
+				}
+			}
+			if (declFunc && rootToken->next->type == SYMBOL){
+				struct param *param_ptr = malloc(sizeof(struct param));
+				param_ptr->type = PARAMETER;
+				param_ptr->token = rootToken->next;
+				param_ptr->next = malloc(sizeof(struct param));
+				param_ptr->symbol_ptr = malloc(sizeof(struct symbol));
+				param_ptr->symbol_ptr->symbol_token = rootToken->next;;
+				param_ptr->symbol_ptr->value = NULL;
+				param_ptr->symbol_ptr->dataType = PARAMETER;
+				cFuncParams->next = param_ptr;
+				cFuncParams = cFuncParams->next;
+				strcpy(code + sz,"struct mt_object ");
+				sz += count("struct mt_object ");
+				strcpy(code + sz," "); sz++;
+				strcpy(code + sz,rootToken->next->value);
+				sz += count(rootToken->next->value);
+				rootToken = rootToken->next;
+			}
+		}  else if (rootToken->type == CONDITIONAL){
 			if (strcmp(rootToken->value,"elif") == 0){
 				strcpy(code + sz,"else if");
 				sz += 7;
@@ -386,4 +428,5 @@ void generate(struct token *rootToken,char *code){
 		}
 	} while (rootToken != NULL);
 	code[sz] = '\0';
+	return 0;
 }
