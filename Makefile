@@ -2,7 +2,7 @@
 CC = gcc
 
 # flags to pass compiler
-CFLAGS = 
+CFLAGS = -g
 # name for executable
 EXE = compiler
 
