@@ -98,7 +98,7 @@ int generate(struct token *rootToken,char *code){
 					printf("FOUND!\n");
 				} else {
 					printf("%s not found\n",rootToken->value);
-					return 10;
+					//return 10;
 				}
 				strcpy(code + sz,rootToken->value);
 				sz += count(rootToken->value);
