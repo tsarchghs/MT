@@ -3,41 +3,48 @@ The compiler skips the AST phase and produces the output based on only the token
 Currently it's in alpha stage.
 
 Usage: ```./compiler <file>``` <br>
-If the executable code (```./compiler```) doesn't work for your machine compile with ```make```<br>
-For the compiler to work you must have C's clang compiler. (<a href="https://clang.llvm.org/get_started.html">Building and Running Clang</a>)<br>
+For the compiler to work you must have C's <a href="https://gcc.gnu.org/install/">GCC compiler</a>.<br>
 Sample code:
 ```javascript
-var name = "gjergj";
-var name_copy = name;
-var x = 1;
-var y = 2.3 + 5 / 2;
-var z = y + x;
+var child1 = "John";
+var child2 = "Johnson"; // creative.. I know :)
+var child1_age = 16;
+var child2_age = 16;
 
-// Dynamic typing
-z = "dsasd";
-z = 1;
-z = 1.5 + z;
-
-// Example of nested conditional statements
-if x >= y: // Conditional statements end with the keyword 'end'
-	if z <= x: 
-		z = x + y;
-	end
-	elif z >= x:
-		z = x - y;
-	end
-	else:
-		x = y;
-	end
+if child1_age > child2_age:
+	print(child1_age);
+end
+elif child1_age == child2_age:
+	print("They are the same age");
+end
+else:
+	print(child2_age);
 end
 ```
-
+Output: ``` They are the same age ```<br>
+Dynamic typing:
+```javascript
+var b = "DSASDA";
+print(b)
+b = 31.321;
+print(b)
+b = 52;
+print(b)
+```
+Output:
+```
+DSASDA
+31.321
+52
+```
+Functions: (alpha/buggy)
+```javascript
+function squareOfTwo():
+	print(4);
+end
+squareOfTwo();
+```
 <ul>
-Why is clang required for the compiler to work?
-	<li>Because MT's compiler generates C code and then hands it to clang to do the rest of the job.</li>
-</ul>
-<ul>
-Can the compiler use GCC instead?
-	<li>Nope, I'll add a command line option in the future but for now you can change <code>system("clang o.c");</code> in <code>compiler.c</code> line 70. Or just manually compile the output <code>o.c</code>.
-</li>
+Why is gcc required for the compiler to work?
+	<li>Because MT's compiler (ab)uses GCC's C extension that allows function definitions inside of main function .</li>
 </ul>
