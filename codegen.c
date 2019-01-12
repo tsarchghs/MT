@@ -215,12 +215,15 @@ int generate(struct token *rootToken,char *code){
 						int dtype = dtLaH(rootToken,&root_symbol,locSymbol,1);
 						if (dtype == INTEGER || dtype == 1){
 							writeType(&code,&sz,INTEGER);
+							tmpSymbol->dataType = INTEGER;
 						} else if (dtype == FLOAT_ || dtype == 3){
 							writeType(&code,&sz,FLOAT_);
+							tmpSymbol->dataType = FLOAT_;
 						} else if (dtype == STRING || dtype == 2){
 							writeType(&code,&sz,STRING);
+							tmpSymbol->dataType = STRING;
 						} else {
-							tmpSymbol->dataType = tmpSymbol->dataType;
+							tmpSymbol->dataType = locSymbol->dataType;
 							writeType(&code,&sz,tmpSymbol->dataType);
 						} 
 					} else {
@@ -262,12 +265,20 @@ int generate(struct token *rootToken,char *code){
 				struct token *original = rootToken;
 				while (rootToken->next != NULL && rootToken->type != SEMICOLON){
 					if (rootToken->type == FLOAT_){
-						dtype = 2;
+						dtype = FLOAT_;
 						break;
 					} else if (rootToken->type == INTEGER && dtype != 2){
-						dtype = 1;
+						dtype = INTEGER;
 					} else if (rootToken->type == STRING){
-						dtype = 3;
+						dtype = STRING;
+					} else if (rootToken->type == SYMBOL){
+						struct symbol *tmpSymbol = malloc(sizeof(struct symbol));
+						int found = findSymbol(&root_symbol,rootToken->value,&tmpSymbol);
+						if (found){
+							dtype = tmpSymbol->dataType;
+						} else {
+							printf("Var %s not found!\n",rootToken->value);
+						}
 					}
 					rootToken = rootToken->next;
 				}
@@ -280,11 +291,12 @@ int generate(struct token *rootToken,char *code){
 				}
 				char repr[] = "{.type=%d,.%s=";
 				char repr2[500];
-				if (dtype == 2){
+				printf("%d--\n",dtype);
+				if (dtype == FLOAT_){
 					sprintf(repr2,repr,FLOAT_,"float_");
-				} else if (dtype == 1) {
+				} else if (dtype == INTEGER) {
 					sprintf(repr2,repr,INTEGER,"integer");					
-				} else if (dtype == 3){
+				} else if (dtype == STRING){
 					sprintf(repr2,repr,STRING,"string");					
 				}
 				strcpy(code + sz,repr2);
