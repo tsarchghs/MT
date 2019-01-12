@@ -50,20 +50,6 @@ int sliceString(char string[],int sI,int eI,size_t sz,char *location){
 	char str[eI-sI+1];
 	int i = 0;
 	for (int x=sI;x<eI;x++){
-		if ( //isspace(string[x]) ||
-			string[x] == '=' ||
-			string[x] == ')' ||
-			string[x] == '(' ||
-			string[x] == ',' ||
-			string[x] == '+' ||
-			string[x] == '>' ||
-			string[x] == '<' ||
-			string[x] == '-' ||
-			string[x] == '/' || 
-			string[x] == ':' || 
-			string[x] == ';'){
-			break;
-		}
 		str[i] = string[x];
 		i++;	
 	}
