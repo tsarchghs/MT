@@ -4,3 +4,7 @@ b = 31.1;
 print(b);
 b = 52;
 print(b);
+var a = b;
+print(b);
+a = "helloo";
+print(a);
