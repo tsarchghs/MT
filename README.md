@@ -25,11 +25,11 @@ Output: ``` They are the same age ```<br>
 Dynamic typing:
 ```javascript
 var b = "DSASDA";
-print(b)
+print(b);
 b = 31.321;
-print(b)
+print(b);
 b = 52;
-print(b)
+print(b);
 ```
 Output:
 ```
