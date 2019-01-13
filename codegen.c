@@ -213,19 +213,23 @@ int generate(struct token *rootToken,char *code){
 						struct token *original = rootToken;
 						struct symbol *locSymbol = malloc(sizeof(struct symbol));
 						int dtype = dtLaH(rootToken,&root_symbol,locSymbol,1);
-						if (dtype == INTEGER || dtype == 1){
-							writeType(&code,&sz,INTEGER);
-							tmpSymbol->dataType = INTEGER;
-						} else if (dtype == FLOAT_ || dtype == 3){
-							writeType(&code,&sz,FLOAT_);
-							tmpSymbol->dataType = FLOAT_;
-						} else if (dtype == STRING || dtype == 2){
-							writeType(&code,&sz,STRING);
-							tmpSymbol->dataType = STRING;
+						if (dtype != -2){
+							if (dtype == INTEGER || dtype == 1){
+								writeType(&code,&sz,INTEGER);
+								tmpSymbol->dataType = INTEGER;
+							} else if (dtype == FLOAT_ || dtype == 3){
+								writeType(&code,&sz,FLOAT_);
+								tmpSymbol->dataType = FLOAT_;
+							} else if (dtype == STRING || dtype == 2){
+								writeType(&code,&sz,STRING);
+								tmpSymbol->dataType = STRING;
+							} else {
+								tmpSymbol->dataType = locSymbol->dataType;
+								writeType(&code,&sz,tmpSymbol->dataType);
+							} 
 						} else {
-							tmpSymbol->dataType = locSymbol->dataType;
 							writeType(&code,&sz,tmpSymbol->dataType);
-						} 
+						}
 					} else {
 						if (rootToken->value[0] == ';'){ // ugly I know :'(
 							strcpy(code + sz,";");
@@ -291,7 +295,6 @@ int generate(struct token *rootToken,char *code){
 				}
 				char repr[] = "{.type=%d,.%s=";
 				char repr2[500];
-				printf("%d--\n",dtype);
 				if (dtype == FLOAT_){
 					sprintf(repr2,repr,FLOAT_,"float_");
 				} else if (dtype == INTEGER) {
@@ -426,6 +429,7 @@ int generate(struct token *rootToken,char *code){
 		}
 	} while (rootToken != NULL);
 	code[sz] = '\0';
+	printf("Compiled.\n");
 	return 0;
 }
 
