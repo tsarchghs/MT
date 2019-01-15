@@ -423,6 +423,10 @@ int generate(struct token *rootToken,char *code){
 			}
 		}  else if (rootToken->type == CONDITIONAL){
 			handle_conditionals(&code,&sz,rootToken->value,&declFunc,&inConditional,&inFuncParams);
+		} else if (rootToken->type == WHILE){
+			inConditional = 1;
+			strcpy(code+sz,"while(");
+			sz += count("while(");
 		}
 		if (rootToken != NULL){
 			rootToken = rootToken->next;
