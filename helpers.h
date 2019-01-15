@@ -22,6 +22,7 @@ const int RETURN;
 const int TYPE;
 const int PARAMETER;
 const int FUNCTION_CALL;
+const int WHILE;
 
 int sliceString(char string[],int sI,int eI,size_t sz,char *location);
 int count(char string[]);
