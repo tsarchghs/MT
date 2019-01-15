@@ -68,6 +68,8 @@ void lex(char *sCode,struct token *rootToken){
 					nxt_token->type = OPERATOR;
 				} else if (strcmp(value,"var") == 0){
 					nxt_token->type = DECLARATION;
+				} else if (strcmp(value,"while") == 0){
+					nxt_token->type = WHILE;
 				} else if (strcmp(value,"int") == 0 ||
 						   strcmp(value,"float") == 0 || 
 						   strcmp(value,"string") == 0){
