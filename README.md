@@ -4,7 +4,28 @@ Currently it's in alpha stage.
 
 Usage: ```./compiler <file>``` <br>
 For the compiler to work you must have C's <a href="https://gcc.gnu.org/install/">GCC compiler</a>.<br>
-Sample code:
+Examples:
+Print 1 to 10
+```javascript
+var b = 1;
+while b < 11:
+        print(b);
+        b += 1;
+end
+```
+output:
+```
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
 ```javascript
 var child1 = "John";
 var child2 = "Johnson"; // creative.. I know :)
